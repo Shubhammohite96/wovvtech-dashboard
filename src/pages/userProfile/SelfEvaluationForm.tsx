@@ -4,7 +4,8 @@ import CustomTextField from "../../components/cutomComponents/CustomTextField";
 import StarIcon from "@mui/icons-material/Star";
 import CustomButton from "../../components/cutomComponents/CustomButton";
 import UserProfileTabs from "./UserProfileTabs";
-
+ 
+// @ts-ignore
 const StyledTextarea = styled(TextareaAutosize)(({ theme }) => ({
     width: "403px",
     maxWidth: "403px",

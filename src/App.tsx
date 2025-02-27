@@ -1,4 +1,3 @@
-import LoginPage from './pages/loginPage/LoginPage'
 import { CssBaseline, GlobalStyles } from '@mui/material'
 import Routing from './routing/Routing'
 

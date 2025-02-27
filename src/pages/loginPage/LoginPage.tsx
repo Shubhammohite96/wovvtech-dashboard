@@ -26,7 +26,7 @@ const LoginPage: React.FC = () => {
     
     const navigate = useNavigate();
 
-    const { control, handleSubmit, trigger,  formState: { errors,isValid  } } = useForm<loginForm>({
+    const { control, handleSubmit,formState: { errors,isValid  } } = useForm<loginForm>({
         defaultValues: {
             email: "",
             password: "",
@@ -42,6 +42,7 @@ const LoginPage: React.FC = () => {
       
             setAuthData(token, user.userRole); // Save token and role in localStorage
             navigate("/dashboard"); // Redirect to dashboard
+            // @ts-ignore
           } catch (error:{messsage:string}) {
             alert(error.message);
           }

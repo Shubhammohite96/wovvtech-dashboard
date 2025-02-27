@@ -6,7 +6,6 @@ import {
   TableHead,
   TableRow,
   Paper,
-  TableSortLabel,
   Pagination,
   PaginationItem,
   Box,
@@ -80,10 +79,13 @@ function ReusableTable<T>({
   onClaimStatus,
 }: TableProps<T>) {
   const [currentPage, setCurrentPage] = useState(1);
+  // @ts-ignore
   const [rowsPerPage, setRowsPerPage] = useState(pageSize);
+  // @ts-ignore
   const [orderBy, setOrderBy] = useState<keyof T | null>(
     defaultSortedColumn || null
   );
+  // @ts-ignore
   const [order, setOrder] = useState<"asc" | "desc">("asc");
   const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedRow, setSelectedRow] = useState<T | null>(null);

@@ -1,12 +1,6 @@
 import {
-  Card,
   Typography,
   Box,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import ReportCard from "./ReportCard";

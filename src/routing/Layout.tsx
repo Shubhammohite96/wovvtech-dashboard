@@ -1,7 +1,6 @@
 import React from "react";
-import { Box, CssBaseline, Drawer, Toolbar } from "@mui/material";
+import { Box, CssBaseline,} from "@mui/material";
 import SidebarDrawer from "../components/sidebar/SidebarDrawer";
-import { drawerWidth } from "../signals/sidebarDrawerSignal";
 import Header from "../components/header/Header";
 
 interface LayoutProps {

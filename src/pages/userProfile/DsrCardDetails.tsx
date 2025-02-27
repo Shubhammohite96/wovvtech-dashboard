@@ -1,5 +1,5 @@
 import { Box, Container, MenuItem, Select, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import UserProfileTabs from "./UserProfileTabs";
 import ReusableTable, { ColumnConfig } from "../../components/cutomComponents/ReusableTable";
 

@@ -1,4 +1,4 @@
-import React, { lazy } from 'react'
+import { lazy } from 'react'
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import PrivateRoute from './PrivateRoute';
 import { roleConfig } from '../config/roleConfig';
@@ -17,7 +17,6 @@ const DashboardPage = lazy(() => import('../pages/dashboardPage/DashboardPage'))
 import DsrCardDetails from './../pages/userProfile/DsrCardDetails';
 import OffsetForm from '../pages/reports/OffsetForm';
 import SelfEvaluationForm from './../pages/userProfile/SelfEvaluationForm';
-import FileZilla from './../pages/dashboardPage/FileZilla';
 
 
 function Routing() {
@@ -153,24 +152,6 @@ function Routing() {
             </PrivateRoute>
           }
         />
-        <Route
-          path="/FileZilla"
-          element={
-            <PrivateRoute allowedRoles={["admin"]}>
-              <FileZilla />
-            </PrivateRoute>
-          }
-        />
-        {/* <Route
-          path="/filezilla"
-          element={
-            <AuthGuard>
-              <MainLayout>
-                <FileZilla />
-              </MainLayout>
-            </AuthGuard>
-          }
-        /> */}
       </Routes>
     </Router>
   );

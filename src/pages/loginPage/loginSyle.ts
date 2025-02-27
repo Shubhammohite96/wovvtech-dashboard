@@ -1,8 +1,5 @@
 import { styled, Box, TextField, Button, Checkbox } from "@mui/material";
 import loginBg from "../../assets/loginBg.png";
-
-import Grid from '@mui/material/Grid2';
-
 export const Form = styled(Box)(({ theme }) => ({
     width: "100%",
     maxWidth: 400,

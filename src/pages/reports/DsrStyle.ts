@@ -15,7 +15,7 @@ export const StyledFormBox = styled(Box)({
   justifyContent: "center",
   alignItems: "center",
 });
-
+// @ts-ignore
 export const StyledTextarea = styled(TextareaAutosize)(({ theme }) => ({
   width: "403px",
   maxWidth: "403px",
