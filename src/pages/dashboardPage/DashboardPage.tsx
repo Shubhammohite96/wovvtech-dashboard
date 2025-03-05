@@ -38,7 +38,7 @@ interface User {
   meetingHours: number;
   offComputerHours: number;
   onComputerHours: number;
-  totalHours: number;
+  totalHours: number; 
 }
 
 interface UserData {
