@@ -3,28 +3,27 @@ import {
     Box,
     Typography,
     Button,
-    TextField
+    TextField,
+    TextareaAutosize
 } from '@mui/material';
-import { StyledDsrRoot } from './DsrStyle';
+import { StyledDsrRoot } from '../reports/DsrStyle';
 import CustomTextField from "../../components/cutomComponents/CustomTextField";
 import Navbar from "../../components/Navbar";
+import { useNavigate } from "react-router-dom";
 
-const BuilderAnnouncement: React.FC = () => {
-    console.log('child re render builder Ammooncemmet')
+const WovvtechNotification: React.FC = () => {
+    const navigate = useNavigate();
     const [formData, setFormdata] = useState({
         announcementDate: '',
         title: '',
-        content: ''
+        description: ''
     })
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setFormdata(prevState => ({ ...prevState, [e.target.name]: e.target.value }))
     }
-
     const handleSubmit = () => {
-        
+        navigate('/NotificationList')
     }
-
     return (
         <StyledDsrRoot>
             <Navbar />
@@ -44,7 +43,7 @@ const BuilderAnnouncement: React.FC = () => {
                         <TextField
                             name="announcementDate"
                             type="date"
-                            placeholder="MR Raise Date"
+                            placeholder="Announcement Date"
                             InputLabelProps={{ shrink: true }}
                             InputProps={{
                                 sx: {
@@ -63,14 +62,11 @@ const BuilderAnnouncement: React.FC = () => {
                             onChange={handleChange}
                         />
                     </Box>
-
-                    <Box
-                        sx={{ display: "flex", flexDirection: "column", marginTop: "10px" }}
-                    >
-                        <Typography>Ticket ID</Typography>
+                    <Box sx={{ display: "flex", flexDirection: "column", marginTop: "10px" }}>
+                        <Typography>Title</Typography>
                         <CustomTextField
                             name="title"
-                            placeholder="Enter your Email"
+                            placeholder="Enter title"
                             height="40px"
                             padding="10px"
                             width="406px"
@@ -79,7 +75,24 @@ const BuilderAnnouncement: React.FC = () => {
                             onChange={handleChange}
                         />
                     </Box>
-
+                    <Box sx={{ display: "flex", flexDirection: "column", marginTop: "10px" }}>
+                        <Typography>Discription</Typography>
+                        <TextareaAutosize
+                            minRows={5}
+                            name="description"
+                            placeholder="Enter your text..."
+                            style={{
+                                width: "100%",
+                                padding: "10px",
+                                fontSize: "16px",
+                                borderRadius: "5px",
+                                border: "1px solid #ccc",
+                                resize: "none"
+                            }}
+                            value={formData.description}
+                            onChange={handleChange}
+                        />
+                    </Box>
                     <Box sx={{ display: "flex", flexDirection: "column", marginTop: "10px" }}>
                         <Button onClick={handleSubmit}>submit</Button>
                     </Box>
@@ -88,4 +101,4 @@ const BuilderAnnouncement: React.FC = () => {
         </StyledDsrRoot>
     )
 }
-export default BuilderAnnouncement;
+export default WovvtechNotification;

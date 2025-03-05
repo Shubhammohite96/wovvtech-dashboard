@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Box } from "@mui/material";
 import { styled } from "@mui/system";
-// @ts-ignore
+//@ts-ignore
 const StyledButton = styled(Button)<{ variant: string }>(({ theme, variant }) => ({
   textTransform: "capitalize",
   ...(variant === "outlined" && {
