@@ -17,7 +17,6 @@ import Navbar from "../../components/Navbar";
 interface FormEntry {
   id: number;
   item: string;
-  date:string;
   description: string;
   statusId: string;
   status?:string;
@@ -37,7 +36,6 @@ const DsrReport: React.FC = () => {
   const [entries, setEntries] = useState<FormEntry[]>([]);
   const [formData, setFormData] = useState<FormEntry>({
     id: Date.now(),
-    date:"",
     item: "",
     description: "",
     statusId: "",
@@ -60,7 +58,6 @@ const DsrReport: React.FC = () => {
 
   const columns: ColumnConfig<(typeof entries)[0]>[] = [
     { key: "item", label: "Item" },
-    { key: "date", label: "Date" },
     { key: "description", label: "Description" },
     { key: "status", label: "Status" },
     { key: "storyPoints", label: "Story Points" },
@@ -84,7 +81,6 @@ const DsrReport: React.FC = () => {
     setFormData({
       id: Date.now(),
       item: "",
-      date:"",
       description: "",
       statusId: "",
       storyPoints: "",
@@ -152,21 +148,6 @@ const DsrReport: React.FC = () => {
               sx={{ backgroundColor: "#FFFFFF" }}
               value={formData.item}
               onChange={(e) => handleInputChange("item", e.target.value)}
-            />
-          </Box>
-          <Box
-            sx={{ display: "flex", flexDirection: "column", marginTop: "10px" }}
-          >
-            <Typography>Select Date</Typography>
-            <CustomTextField
-              placeholder="Enter your item"
-              height="40px"
-              padding="10px"
-              width="406px"
-              sx={{ backgroundColor: "#FFFFFF" }}
-              value={formData.date}
-              type="date"
-              onChange={(e) => handleInputChange("date", e.target.value)}
             />
           </Box>
           <Box

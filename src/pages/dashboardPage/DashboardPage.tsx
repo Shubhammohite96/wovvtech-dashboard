@@ -1,4 +1,4 @@
-import React, {useState } from "react";
+import React, { useEffect, useState } from "react";
 import CustomSelectDropdown from "../../components/cutomComponents/CustomDropdown";
 import {
   Box,
@@ -17,15 +17,82 @@ import ReusableTable, {
   ColumnConfig,
 } from "../../components/cutomComponents/ReusableTable";
 import sortIcon from "../../assets/sortIcon.png";
-import {Search } from "@mui/icons-material";
+import { Search } from "@mui/icons-material";
 import ClaimModal from "./ClaimModal";
+import KeyLoggerList from "./KeyLoggerList";
+
 const actions = {
   claimStatus: true
 };
+
+interface User {
+  empId: string | number;
+  empName?: string;
+  totalKeyPress: number;
+  totalWhiteKeyPress: number;
+  totalVisibleKeyPress: number;
+  totalInVisibleKeyPress: number;
+  activeTimeCount: number;
+  idleHours: number;
+  inactiveTimeCount: number;
+  meetingHours: number;
+  offComputerHours: number;
+  onComputerHours: number;
+  totalHours: number;
+}
+
+interface UserData {
+  email?: string;
+  emp_code?: string;
+  guid?: string;
+  name?: string;
+  status?: string;
+  username?: string;
+}
+
+interface KeyloggerData {
+  totalKeys?: number;
+  whitespaceKeys?: number;
+  visibleKeys?: number;
+  invisibleKeys?: number;
+}
+
+interface TeamLoggerData {
+  activeTimeCount: number;
+  idleHours: number;
+  inactiveTimeCount: number;
+  meetingHours: number;
+  offComputerHours: number;
+  onComputerHours: number;
+  totalHours: number;
+}
+
+interface DateWise {
+  [date: string]: {
+    keylogerData?: KeyloggerData;
+    teamlogerReport?: TeamLoggerData;
+  };
+}
+
+
+interface DailySummary {
+  [key: string]: {
+    dateWise?: DateWise;
+    userData?: UserData;
+  };
+}
+
+interface FileData {
+  dailySummary: DailySummary,
+  structuredData: object
+}
+
 function DashboardPage() {
   const [selectedValue, setSelectedValue] = useState<string | number>("");
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null)
+  const [fileData, setFileData] = useState<FileData>({ dailySummary: {}, structuredData: {} });
+  const [users, setUsers] = useState<User[]>([])
 
   // Options for dropdown
   const menuItems = [
@@ -43,29 +110,7 @@ function DashboardPage() {
     console.log("Button clicked!");
   };
 
-  const users = [
-    {
-      id: 1,
-      empId: "TCPL496",
-      empName: "Aman Gupta",
-      totalKeyPress: 28,
-      totalWhiteKeyPress: 16,
-      totalVisibleKeyPress: 16,
-      totalInVisibleKeyPress: 10,
-    },
-    {
-      id: 2,
-      empId: "TCPL494",
-      empName: "Neha Kumaru",
-      totalKeyPress: 28,
-      totalWhiteKeyPress: 16,
-      totalVisibleKeyPress: 16,
-      totalInVisibleKeyPress: 10,
-    },
-  ];
-
-  // Column definitions (columns)
-  const columns: ColumnConfig<(typeof users)[0]>[] = [
+  const columns: ColumnConfig<User>[] = [
     {
       key: "empId",
       label: "Emp Id",
@@ -96,6 +141,42 @@ function DashboardPage() {
       label: "Total Invisible Key Presses",
       icon: sortIcon,
     },
+    {
+      key: "activeTimeCount",
+      label: "Active Time Count",
+      icon: sortIcon,
+    },
+    {
+      key: "idleHours",
+      label: "Idle Hours",
+      icon: sortIcon,
+    },
+    
+    {
+      key: "inactiveTimeCount",
+      label: "Inactive Time Count",
+      icon: sortIcon,
+    },    
+    {
+      key: "meetingHours",
+      label: "Meeting Hours",
+      icon: sortIcon,
+    },    
+    {
+      key: "offComputerHours",
+      label: "Off Computer Hours",
+      icon: sortIcon,
+    },
+    {
+      key: "onComputerHours",
+      label: "On Computer Hours",
+      icon: sortIcon,
+    },
+    {
+      key: "totalHours",
+      label: "Total Hours",
+      icon: sortIcon,
+    },
   ];
 
   const handleClaimStatus = (row: any) => {
@@ -103,10 +184,72 @@ function DashboardPage() {
     setModalOpen(true);
   };
 
+  useEffect(() => {
+    if (Object.keys(fileData.dailySummary).length) {
+      const users: User[] = [];
+
+      Object.keys(fileData.dailySummary).map((val) => {
+        let totalKeys = 0;
+        let whitespaceKeys = 0;
+        let visibleKeys = 0;
+        let invisibleKeys = 0;
+        let activeTimeCount = 0;
+        let idleHours = 0;
+        let inactiveTimeCount =0;
+        let meetingHours = 0;
+        let offComputerHours = 0;
+        let onComputerHours = 0;
+        let totalHours = 0;
+
+        if (fileData.dailySummary[val].dateWise) {
+          Object.keys(fileData.dailySummary[val].dateWise).map((date) => {
+            if (val === "TCPL463" && fileData.dailySummary[val].dateWise) {
+              const keyLoggerData = fileData.dailySummary[val].dateWise[date].keylogerData;
+              const teamLoggerData = fileData.dailySummary[val].dateWise[date].teamlogerReport;
+              
+              totalKeys += keyLoggerData?.totalKeys || 0;
+              whitespaceKeys += keyLoggerData?.whitespaceKeys || 0;
+              visibleKeys += keyLoggerData?.visibleKeys || 0;
+              invisibleKeys += keyLoggerData?.invisibleKeys || 0;
+              activeTimeCount += teamLoggerData?.activeTimeCount || 0;
+              idleHours += teamLoggerData?.idleHours || 0;
+              idleHours = parseFloat(idleHours.toFixed(2));
+              inactiveTimeCount += teamLoggerData?.inactiveTimeCount || 0;
+              meetingHours += teamLoggerData?.meetingHours || 0;
+              offComputerHours += teamLoggerData?.offComputerHours || 0;
+              offComputerHours = parseFloat(offComputerHours.toFixed(2))
+              onComputerHours += teamLoggerData?.onComputerHours ||0;
+              onComputerHours = parseFloat(onComputerHours.toFixed(2))
+              totalHours += teamLoggerData?.totalHours || 0;
+              totalHours = parseFloat(totalHours.toFixed(2))
+            }
+          })
+        }
+        const user = {
+          empId: val,
+          empName: fileData.dailySummary[val].userData?.name,
+          totalKeyPress: totalKeys,
+          totalWhiteKeyPress: whitespaceKeys,
+          totalVisibleKeyPress: visibleKeys,
+          totalInVisibleKeyPress: invisibleKeys,
+          activeTimeCount: activeTimeCount,
+          idleHours: idleHours,
+          inactiveTimeCount: inactiveTimeCount,
+          meetingHours: meetingHours,
+          offComputerHours: offComputerHours,
+          onComputerHours: onComputerHours,
+          totalHours: totalHours
+        }
+        users.push(user);
+      })
+      setUsers(users);
+    }
+  }, [fileData])
+
   return (
     <>
       <Box sx={{ width: "100%", padding: "14px 11px" }}>
-        <StyledTypography>Key Logger Activity shubham</StyledTypography>
+        <StyledTypography>Key Logger Activity</StyledTypography>
         <StyledBox>
           <Box>
             <StyledTypography>Filters</StyledTypography>
@@ -217,7 +360,7 @@ function DashboardPage() {
             />
           </StyledChildCommonDropDownsBox>
         </StyledDropDownsBox>
-        <Box sx={{ marginTop:{md:'10',sm:'20'} }}>
+        <Box sx={{ marginTop: { md: '10', sm: '20' } }}>
           <CustomTextField
             placeholder="Enter your name"
             icon={<Search />}
@@ -234,13 +377,14 @@ function DashboardPage() {
             columns={columns}
             rows={users}
             showPagination={true}
-            pageSize={5}
+            pageSize={15}
             actions={actions}
             showEditMenuIcon={true}
             onClaimStatus={handleClaimStatus}
           />
         </Box>
         <ClaimModal open={isModalOpen} onClose={() => setModalOpen(false)} rowData={selectedRow || undefined} />
+        <KeyLoggerList fileData={fileData} setFileData={setFileData} />        
       </Box>
     </>
   );

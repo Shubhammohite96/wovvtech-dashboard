@@ -14,9 +14,11 @@ const menuItems = [
   { key: "profile", label: "Profile", icon: <Person />, path: "/Profile", roles: ["admin"] },
   { key: "dsrReport", label: "Reports", icon: <Person />, path: "/DsrReport", roles: ["admin"] },
   { key: "adminDashboard", label: "AdminDashBoard", icon: <Person />, path: "/AdminDashBoard", roles: ["admin"] },
-  { key: "uploadCsv", label: "Upload CSV", icon: <Person />, path: "/uploadCsv", roles: ["admin"] },
-  { key: "analytics", label: "Analytics", icon: <Person />, path: "/analytics", roles: ["admin"] },
-  { key: "fileZilla", label: "fileZilla", icon: <Person />, path: "/fileZilla", roles: ["admin"] },
+  { key: "uploadCsv", label: "Upload CSV", icon: <Person />, path: "/UploadCsv", roles: ["admin"] },
+  { key: "analytics", label: "Analytics", icon: <Person />, path: "/Analytics", roles: ["admin"] },
+  { key: "expertRating", label: "Expert Rating", icon: <Person />, path: "/ExpertRating", roles: ["admin"] },
+  { key: "wovvtechNotification", label: "Wovvtech Notification", icon: <Person />, path: "/WovvtechNotification", roles: ["admin"] },
+  { key: "traineeList", label: "Training", icon: <Person />, path: "/TraineeList", roles: ["admin"] },
 ];
 
 const SidebarDrawer: React.FC = () => {

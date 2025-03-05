@@ -22,7 +22,6 @@ const WeeklyDataForm = () => {
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    console.log(`tagertName: ${e.target.name} targetValue: ${e.target.value}`)
     setFormdata(prevState => ({ ...prevState, [e.target.name]: e.target.value }))
   }
 
@@ -53,7 +52,7 @@ const WeeklyDataForm = () => {
       alert('email is empty')
     }
   }
-console.log('child re render weekly')
+
   return (
     <StyledDsrRoot>
       <Navbar />

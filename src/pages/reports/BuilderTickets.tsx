@@ -36,7 +36,6 @@ const BuilderTickets: React.FC = () => {
                 alert("File size must be less than 10 MB.");
                 return;
             }
-
             setFormdata(prevState => ({ ...prevState, selectedFile: file }));
         }
     };
@@ -102,7 +101,7 @@ const BuilderTickets: React.FC = () => {
                         <Typography>Reason for raising ticket</Typography>
                         <CustomTextField
                             name="ticketReason"
-                            placeholder="Enter your Email"
+                            placeholder="Enter reason here.."
                             height="40px"
                             padding="10px"
                             width="406px"
@@ -113,11 +112,11 @@ const BuilderTickets: React.FC = () => {
                     </Box>
 
                     <Box sx={{ display: "flex", flexDirection: "column", marginTop: "10px" }}>
-                        <Typography>Ticket Raising Date</Typography>
+                        <Typography>Ticket Raised Date</Typography>
                         <TextField
                             name="ticketRaisingDate"
                             type="date"
-                            placeholder="MR Raise Date"
+                            placeholder="Ticket Raise Date"
                             InputLabelProps={{ shrink: true }}
                             InputProps={{
                                 sx: {
@@ -143,7 +142,7 @@ const BuilderTickets: React.FC = () => {
                         <Typography>Ticket ID</Typography>
                         <CustomTextField
                             name="ticketId"
-                            placeholder="Enter your Email"
+                            placeholder="Enter ticket id"
                             height="40px"
                             padding="10px"
                             width="406px"
@@ -152,8 +151,6 @@ const BuilderTickets: React.FC = () => {
                             onChange={handleChange}
                         />
                     </Box>
-
-
                     <Box sx={{ display: "flex", flexDirection: "column", marginTop: "10px" }}>
                         <Typography>Ticket Screenshot</Typography>
                         <input

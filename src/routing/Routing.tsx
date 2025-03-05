@@ -10,13 +10,17 @@ import WeeklyDataForm from '../pages/reports/WeeklyDataForm';
 import UploadCsv from '../pages/UploadCsv/UploadCsv';
 import Analytics from '../pages/Analytics/Analytics';
 import BuilderTickets from '../pages/reports/BuilderTickets';
-import BuilderAnnouncement from '../pages/reports/BuilderAnnouncement';
+import ExpertRating from '../pages/ExpertRating/ExpertRating';
 import MonthFilterTable from '../pages/userProfile/UserOffsetData';
+import BuilderShift from '../pages/BuilderShift/BuilderShift';
+import WovvtechNotification from '../pages/WovvvtechNotification/WovvtechNotification';
+import NotificationList from '../pages/WovvvtechNotification/NotificationList';
+import TraineeList from '../pages/Training/TraineeList';
+import TrainingDetails from '../pages/Training/TrainingDetails';
 
 const DashboardPage = lazy(() => import('../pages/dashboardPage/DashboardPage'));
 import DsrCardDetails from './../pages/userProfile/DsrCardDetails';
 import OffsetForm from '../pages/reports/OffsetForm';
-import SelfEvaluationForm from './../pages/userProfile/SelfEvaluationForm';
 
 
 function Routing() {
@@ -100,7 +104,7 @@ function Routing() {
         />
 
         <Route
-          path="/analytics"
+          path="/Analytics"
           element={
             <PrivateRoute allowedRoles={["admin"]}>
               <Analytics />
@@ -118,10 +122,10 @@ function Routing() {
         />
 
         <Route
-          path="/BuilderAnnouncement"
+          path="/ExpertRating"
           element={
             <PrivateRoute allowedRoles={["admin"]}>
-              <BuilderAnnouncement />
+              <ExpertRating />
             </PrivateRoute>
           }
         />
@@ -145,10 +149,46 @@ function Routing() {
         />
 
         <Route
-          path="/SelfEvaluationForm"
+          path="/BuilderShift"
           element={
             <PrivateRoute allowedRoles={["admin"]}>
-              <SelfEvaluationForm />
+              <BuilderShift />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/WovvtechNotification"
+          element={
+            <PrivateRoute allowedRoles={["admin"]}>
+              <WovvtechNotification />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/NotificationList"
+          element={
+            <PrivateRoute allowedRoles={["admin"]}>
+              <NotificationList />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/TraineeList"
+          element={
+            <PrivateRoute allowedRoles={["admin"]}>
+              <TraineeList />
+            </PrivateRoute>
+          }
+        />
+        
+        <Route
+          path="/TrainingDetails"
+          element={
+            <PrivateRoute allowedRoles={["admin"]}>
+              <TrainingDetails />
             </PrivateRoute>
           }
         />

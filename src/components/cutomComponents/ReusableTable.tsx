@@ -25,7 +25,6 @@ export interface ColumnConfig<T> {
   sortable?: boolean;
   icon?: string;
   renderCell?: (value: any, row: T) => React.ReactNode; // Updated to React.ReactNode
-  width?: string | number; 
 }
 
 export interface TableProps<T> {
@@ -79,13 +78,13 @@ function ReusableTable<T>({
   onClaimStatus,
 }: TableProps<T>) {
   const [currentPage, setCurrentPage] = useState(1);
-  // @ts-ignore
+  //@ts-ignore
   const [rowsPerPage, setRowsPerPage] = useState(pageSize);
-  // @ts-ignore
+  //@ts-ignore
   const [orderBy, setOrderBy] = useState<keyof T | null>(
     defaultSortedColumn || null
   );
-  // @ts-ignore
+  //@ts-ignore
   const [order, setOrder] = useState<"asc" | "desc">("asc");
   const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedRow, setSelectedRow] = useState<T | null>(null);
@@ -134,7 +133,7 @@ function ReusableTable<T>({
               <HeaderTableCell>Sr. No</HeaderTableCell>
               {columns.map((column) => (
                 <HeaderTableCell key={column.key.toString()}>
-                  <Box display="flex" alignItems="center" sx={{ width: column.width || "auto" }} >
+                  <Box display="flex" alignItems="center">
                     <Typography variant="body1" sx={{ fontSize: "14px" }}>
                       {column.label}
                     </Typography>
@@ -170,7 +169,7 @@ function ReusableTable<T>({
                   {(currentPage - 1) * rowsPerPage + index + 1}
                 </TableCell>
                 {columns.map((column) => (
-                  <TableCell key={column.key.toString()} sx={{ width: column.width || "auto" }}>
+                  <TableCell key={column.key.toString()}>
                     {column.renderCell
                       ? column.renderCell(row[column.key], row)
                       : (row[column.key] as React.ReactNode)}
