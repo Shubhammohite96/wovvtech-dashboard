@@ -6,7 +6,7 @@ const UserProfileTabs: React.FC = () => {
     if (location.pathname === "/Profile") return 0;
     if (location.pathname === "/MonthFilterTable") return 1;
     if (location.pathname === "/DsrCardDetails") return 2;
-    if (location.pathname === "/") return 4;    
+    if (location.pathname === "/SelfEvaluationForm") return 3;  
   };
 
   return (
@@ -14,7 +14,7 @@ const UserProfileTabs: React.FC = () => {
       <Tab label="Profile" component={Link} to="/Profile" />
       <Tab label="Offset" component={Link} to="/MonthFilterTable" />
       <Tab label="DSR" component={Link} to="/DsrCardDetails" />
-      <Tab label="TL Rating" />
+      <Tab label="Self Evaluation form" component={Link} to="/SelfEvaluationForm"/>
     </Tabs>
   );
 };

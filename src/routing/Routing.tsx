@@ -21,6 +21,7 @@ import TrainingDetails from '../pages/Training/TrainingDetails';
 const DashboardPage = lazy(() => import('../pages/dashboardPage/DashboardPage'));
 import DsrCardDetails from './../pages/userProfile/DsrCardDetails';
 import OffsetForm from '../pages/reports/OffsetForm';
+import SelfEvaluationForm from '../pages/userProfile/SelfEvaluationForm';
 
 
 function Routing() {
@@ -189,6 +190,15 @@ function Routing() {
           element={
             <PrivateRoute allowedRoles={["admin"]}>
               <TrainingDetails />
+            </PrivateRoute>
+          }
+        />
+
+<Route
+          path="/SelfEvaluationForm"
+          element={
+            <PrivateRoute allowedRoles={["admin"]}>
+              <SelfEvaluationForm />
             </PrivateRoute>
           }
         />
