@@ -88,7 +88,7 @@ const KeyLoggerList: React.FC<KeyLoggerListProps> = ({ fileData, setFileData }) 
             if (fileLists[key].length > 0) {
                 for (const file of fileLists[key]) {
                     const fileName = file.split("/").pop();
-                    structuredData[key].lastFileName = fileName;
+                    // structuredData[key].lastFileName = fileName;
                     const [date, timeSlot] = fileName.split(".")[0].split("_");
                     if (dateTimeSlot[key]?.[date]) {
                         dateTimeSlot[key] = { ...dateTimeSlot[key], [date]: [...dateTimeSlot[key][date], timeSlot] }

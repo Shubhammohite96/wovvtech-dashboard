@@ -17,6 +17,7 @@ import WovvtechNotification from '../pages/WovvvtechNotification/WovvtechNotific
 import NotificationList from '../pages/WovvvtechNotification/NotificationList';
 import TraineeList from '../pages/Training/TraineeList';
 import TrainingDetails from '../pages/Training/TrainingDetails';
+import TeamLoggerData from '../pages/dashboardPage/TeamLoggerData';
 
 const DashboardPage = lazy(() => import('../pages/dashboardPage/DashboardPage'));
 import DsrCardDetails from './../pages/userProfile/DsrCardDetails';
@@ -184,7 +185,7 @@ function Routing() {
             </PrivateRoute>
           }
         />
-        
+
         <Route
           path="/TrainingDetails"
           element={
@@ -194,11 +195,20 @@ function Routing() {
           }
         />
 
-<Route
+        <Route
           path="/SelfEvaluationForm"
           element={
             <PrivateRoute allowedRoles={["admin"]}>
               <SelfEvaluationForm />
+            </PrivateRoute>
+          }
+        />
+        
+        <Route
+          path="/TeamLoggerData"
+          element={
+            <PrivateRoute allowedRoles={["admin"]}>
+              <TeamLoggerData />
             </PrivateRoute>
           }
         />
