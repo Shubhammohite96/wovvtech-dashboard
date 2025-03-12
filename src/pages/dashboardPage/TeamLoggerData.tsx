@@ -261,13 +261,13 @@ function TeamLoggerData() {
         <>
             <Box sx={{ width: "100%", padding: "14px 11px" }}>
                 <Button
-                    style={{ border: "1px solid black" }}
+                    style={{ border: "1px solid black" ,}}
                     onClick={navigateToKeyLoggerData}
                 >
-                    Key Logger Activity
+                  Key Logger Activity
                 </Button>
                 <Button
-                    style={{ border: "1px solid black", marginLeft: "20px" }}>
+                    style={{ border: "1px solid black", marginLeft: "20px",backgroundColor:'#696969',color:'white'  }}>
                     Team Logger Data
                 </Button>
                 <StyledBox>

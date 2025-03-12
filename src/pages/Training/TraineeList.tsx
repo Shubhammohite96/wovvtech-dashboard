@@ -8,6 +8,7 @@ interface Trainee {
     id: string;
     userName: string;
     trainingStartDate: string;
+    progress:string;
     trainingEndDate: string;
     status: string;
     action?: JSX.Element;
@@ -51,6 +52,7 @@ const TraineeList: React.FC = () => {
             id: "1",
             userName: "Native User1",
             trainingStartDate: "22/02/2025",
+            progress:'10%',
             trainingEndDate: "22/03/2025",
             status: "Started",
         },
@@ -58,6 +60,7 @@ const TraineeList: React.FC = () => {
             id: "2",
             userName: "Native User2",
             trainingStartDate: "16/02/2025",
+            progress:'10%',
             trainingEndDate: "16/03/2025",
             status: "Pending",
         },
@@ -65,6 +68,7 @@ const TraineeList: React.FC = () => {
             id: "3",
             userName: "Native User3",
             trainingStartDate: "19/02/2025",
+            progress:'10%',
             trainingEndDate: "16/03/2025",
             status: "Completed"
         }
@@ -74,6 +78,7 @@ const TraineeList: React.FC = () => {
             id: "1",
             userName: "ROR User1",
             trainingStartDate: "22/02/2025",
+             progress:'10%',
             trainingEndDate: "16/03/2025",
             status: "Started",
         },
@@ -81,6 +86,7 @@ const TraineeList: React.FC = () => {
             id: "2",
             userName: "ROR User2",
             trainingStartDate: "16/02/2025",
+             progress:'10%',
             trainingEndDate: "16/03/2025",
             status: "Pending",
         },
@@ -88,6 +94,7 @@ const TraineeList: React.FC = () => {
             id: "3",
             userName: "ROR User3",
             trainingStartDate: "19/02/2025",
+             progress:'10%',
             trainingEndDate: "16/03/2025",
             status: "Completed"
         }
@@ -98,6 +105,7 @@ const TraineeList: React.FC = () => {
             id: "1",
             userName: "User1",
             trainingStartDate: "22/02/2025",
+             progress:'10%',
             trainingEndDate: "16/03/2025",
             status: "Started",
         },
@@ -105,6 +113,7 @@ const TraineeList: React.FC = () => {
             id: "2",
             userName: "User2",
             trainingStartDate: "16/02/2025",
+             progress:'10%',
             trainingEndDate: "16/03/2025",
             status: "Pending",
         },
@@ -112,6 +121,7 @@ const TraineeList: React.FC = () => {
             id: "3",
             userName: "User3",
             trainingStartDate: "19/02/2025",
+             progress:'10%',
             trainingEndDate: "16/03/2025",
             status: "Completed"
         }
@@ -130,6 +140,10 @@ const TraineeList: React.FC = () => {
         {
             key: "trainingEndDate",
             label: "Training End Date"
+        },
+        {
+            key: "progress",
+            label: "Progress"
         },
         {
             key: "status",
