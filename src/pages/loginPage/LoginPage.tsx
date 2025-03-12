@@ -6,7 +6,7 @@ import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup"; // Import yupResolver
 import * as yup from "yup"; // Import yup for schema validation
 import logoIcon from "../../assets/logoIcon.png";
-import apiClient from "../../Utils/apiClient";
+// import apiClient from "../../Utils/apiClient";
 import { setAuthData } from "../../Utils/authUtils";
 import { useNavigate } from "react-router-dom";
 
