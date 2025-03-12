@@ -21,12 +21,30 @@ import sortIcon from "../../assets/sortIcon.png";
 import { Search } from "@mui/icons-material";
 import ClaimModal from "./ClaimModal";
 import KeyLoggerList from "./KeyLoggerList";
-import CollapsibleTable from "../../components/cutomComponents/CollapsibleTable";
 import { useNavigate } from "react-router-dom";
 
 interface User {
   empId: string | number;
   empName?: string;
+  date?: string;
+  time?: string;
+  totalKeyPress?: number;
+  totalWhiteKeyPress?: number;
+  totalVisibleKeyPress?: number;
+  totalInVisibleKeyPress?: number;
+  activeTimeCount?: number;
+  idleHours?: number;
+  inactiveTimeCount?: number;
+  meetingHours?: number;
+  offComputerHours?: number;
+  onComputerHours?: number;
+  totalHours?: number;
+  invisibleKeys?: number;
+  totalKeys: number;
+  visibleKeys: number;
+  visiblePercentage: number;
+  whitespaceKeys: number;
+  whitespacePercentage: number;
   child?: {
     [date: string]: {
       totalKeyPress?: number;
@@ -54,13 +72,15 @@ interface UserData {
 }
 
 interface KeyloggerData {
+  visibleKeys?: number;
+  visiblePercentage: number;
+  invisibleKeys?: number;
   totalKeys?: number;
   whitespaceKeys?: number;
-  visibleKeys?: number;
-  invisibleKeys?: number;
+  whitespacePercentage: number;
 }
 
-interface TeamLoggerData {
+interface ITeamLoggerData {
   activeTimeCount: number;
   idleHours: number;
   inactiveTimeCount: number;
@@ -73,7 +93,7 @@ interface TeamLoggerData {
 interface DateWise {
   [date: string]: {
     keylogerData?: KeyloggerData;
-    teamlogerReport?: TeamLoggerData;
+    teamlogerReport?: ITeamLoggerData;
   };
 }
 
@@ -84,14 +104,27 @@ interface DailySummary {
   };
 }
 
+interface StructuredData {
+  [key: string]: {
+    [date: string]: {
+      [hours: string]: {
+        keylogerData?: KeyloggerData;
+        teamlogerReport?: ITeamLoggerData;
+        userData?: UserData;
+      };
+    };
+  };
+}
+
 interface FileData {
   dailySummary: DailySummary,
-  structuredData: object
+  structuredData: StructuredData
 }
 
 function DashboardPage() {
   const [selectedValue, setSelectedValue] = useState<string | number>("");
   const [isModalOpen, setModalOpen] = useState(false);
+  //@ts-ignore
   const [selectedRow, setSelectedRow] = useState(null)
   const [fileData, setFileData] = useState<FileData>({ dailySummary: {}, structuredData: {} });
   const [users, setUsers] = useState<User[]>([]);
@@ -130,38 +163,102 @@ function DashboardPage() {
       label: "Employee Name",
       icon: sortIcon,
     },
+    {
+      key: "date",
+      label: "Date",
+      icon: sortIcon,
+    },
+    {
+      key: "time",
+      label: "Hours",
+      icon: sortIcon,
+    },
+    {
+      key: "visibleKeys",
+      label: "Visible Keys",
+      icon: sortIcon,
+    },
+    {
+      key: "visiblePercentage",
+      label: "Visible Percentage",
+      icon: sortIcon,
+    },
+    {
+      key: "invisibleKeys",
+      label: "Invisible Keys",
+      icon: sortIcon,
+    },
+    {
+      key: "totalKeys",
+      label: "Total Keys",
+      icon: sortIcon,
+    },
+    {
+      key: "whitespaceKeys",
+      label: "Whitespace Keys",
+      icon: sortIcon,
+    },
+    {
+      key: "whitespacePercentage",
+      label: "Whitespace Percentage",
+      icon: sortIcon,
+    }
   ];
 
   useEffect(() => {
-    if (Object.keys(fileData.dailySummary).length) {
+    if (Object.keys(fileData.structuredData).length) {
       const users: User[] = [];
 
-      Object.keys(fileData.dailySummary).map((val) => {
+      Object.keys(fileData.structuredData).map((val) => {
         let dateData: any = {};
 
-        if (fileData.dailySummary[val].dateWise) {
-          Object.keys(fileData.dailySummary[val].dateWise).map((date) => {
-            if (fileData.dailySummary[val].dateWise) {
-              const keyLoggerData = fileData.dailySummary[val].dateWise[date].keylogerData;
-              dateData[date] = {
-                totalKeys: keyLoggerData?.totalKeys || 0,
-                whitespaceKeys: keyLoggerData?.whitespaceKeys || 0,
-                visibleKeys: keyLoggerData?.visibleKeys || 0,
-                invisibleKeys: keyLoggerData?.invisibleKeys || 0,
-              }
-            }
-          })
+        if (fileData.structuredData[val]) {
+          const structuredData = fileData.structuredData[val];          
+          if (Object.keys(structuredData).length > 0) {
+            Object.keys(structuredData).map((date) => {
+              
+              Object.keys(structuredData[date]).map((hours) => {
+                const keylogerData = structuredData[date][hours]?.keylogerData;
+
+                dateData = {
+                  date: date,
+                  time: hours,
+                  visibleKeys: keylogerData?.visibleKeys,
+                  visiblePercentage: keylogerData?.visiblePercentage,
+                  invisibleKeys: keylogerData?.invisibleKeys,
+                  totalKeys: keylogerData?.totalKeys,
+                  whitespaceKeys: keylogerData?.whitespaceKeys,
+                  whitespacePercentage: keylogerData?.whitespacePercentage,
+                };
+
+                const user: User = {
+                  empId: val,
+                  empName: fileData.dailySummary[val].userData?.name,
+                  ...dateData,
+                };
+                users.push(user);
+              });
+            });
+          } else {
+            const user: User = {
+              empId: val,
+              empName: fileData.dailySummary[val].userData?.name,
+              totalKeys: 0,
+              visibleKeys: 0,
+              visiblePercentage: 0,
+              invisibleKeys: 0,
+              whitespaceKeys: 0,
+              whitespacePercentage: 0,
+            };
+            users.push(user);
+          }
         }
-        const user = {
-          empId: val,
-          empName: fileData.dailySummary[val].userData?.name,
-          child: dateData
-        }
-        users.push(user);
-      })
+      });
+
       setUsers(users);
     }
-  }, [fileData])
+  }, [fileData]);
+
   return (
     <>
       <Box sx={{ width: "100%", padding: "14px 11px" }}>
@@ -296,8 +393,8 @@ function DashboardPage() {
         </Box>
 
         {/* Table Section */}
-        <Box sx={{ marginTop: "20px" }}>
-          <CollapsibleTable
+        <Box sx={{ marginTop: "20px", width: "99% !important", }}>
+          <ReusableTable
             columns={columns}
             rows={users}
             showPagination={true}

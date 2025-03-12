@@ -44,9 +44,9 @@ export default function CollapsibleTable<T>({
     columns,
     rows,
     pageSize = 5,
-    defaultSortedColumn,
-    showPagination,
+    defaultSortedColumn
 }: TableProps<T>) {
+    //@ts-ignore
     const [currentPage, setCurrentPage] = React.useState(1);
     //@ts-ignore
     const [rowsPerPage, setRowsPerPage] = useState(pageSize);
@@ -56,13 +56,13 @@ export default function CollapsibleTable<T>({
     );
     //@ts-ignore
     const [order, setOrder] = useState<"asc" | "desc">("asc");
-
+    //@ts-ignore
     const totalPages = Math.ceil(rows.length / rowsPerPage);
     const currentRows = rows.slice(
         (currentPage - 1) * rowsPerPage,
         currentPage * rowsPerPage
     );
-
+    //@ts-ignore
     const sortedRows = [...currentRows].sort((a, b) => {
         if (!orderBy) return 0;
         return 0;

@@ -21,12 +21,24 @@ import sortIcon from "../../assets/sortIcon.png";
 import { Search } from "@mui/icons-material";
 import ClaimModal from "./ClaimModal";
 import KeyLoggerList from "./KeyLoggerList";
-import CollapsibleTable from "../../components/cutomComponents/CollapsibleTable";
 import { useNavigate } from "react-router-dom";
 
 interface User {
     empId: string | number;
     empName?: string;
+    date?: string;
+    time?: string;
+    totalKeyPress?: number;
+    totalWhiteKeyPress?: number;
+    totalVisibleKeyPress?: number;
+    totalInVisibleKeyPress?: number;
+    activeTimeCount?: number;
+    idleHours?: number;
+    inactiveTimeCount?: number;
+    meetingHours?: number;
+    offComputerHours?: number;
+    onComputerHours?: number;
+    totalHours?: number;
     child?: {
         [date: string]: {
             totalKeyPress?: number;
@@ -104,6 +116,7 @@ interface FileData {
 function TeamLoggerData() {
     const [selectedValue, setSelectedValue] = useState<string | number>("");
     const [isModalOpen, setModalOpen] = useState(false);
+    //@ts-ignore
     const [selectedRow, setSelectedRow] = useState(null)
     const [fileData, setFileData] = useState<FileData>({ dailySummary: {}, structuredData: {} });
     const [users, setUsers] = useState<User[]>([]);
@@ -142,6 +155,51 @@ function TeamLoggerData() {
             label: "Employee Name",
             icon: sortIcon,
         },
+        {
+            key: "date",
+            label: "Date",
+            icon: sortIcon,
+        },
+        {
+            key: "time",
+            label: "Hours",
+            icon: sortIcon,
+        },
+        {
+            key: "activeTimeCount",
+            label: "Active Time Count",
+            icon: sortIcon,
+        },
+        {
+            key: "idleHours",
+            label: "Idle Hours",
+            icon: sortIcon,
+        },
+        {
+            key: "inactiveTimeCount",
+            label: "Inactive Time Count",
+            icon: sortIcon,
+        },
+        {
+            key: "meetingHours",
+            label: "Meeting Hours",
+            icon: sortIcon,
+        },
+        {
+            key: "offComputerHours",
+            label: "Off Computer Hours",
+            icon: sortIcon,
+        },
+        {
+            key: "onComputerHours",
+            label: "On Computer Hours",
+            icon: sortIcon,
+        },
+        {
+            key: "totalHours",
+            label: "Total Hours",
+            icon: sortIcon,
+        }
     ];
 
     useEffect(() => {
@@ -149,37 +207,52 @@ function TeamLoggerData() {
             const users: User[] = [];
 
             Object.keys(fileData.structuredData).map((val) => {
-                let idleHours = 0;
-                let meetingHours = 0;
-                let offComputerHours = 0;
-                let onComputerHours = 0;
-                let totalHours = 0;
                 let dateData: any = {};
                 if (fileData.structuredData[val]) {
                     const structuredData = fileData.structuredData[val];
-                    Object.keys(structuredData).map((date) => {
-                        Object.keys(structuredData[date]).map((hours) => {
-                            const datetime = date + " " + hours;
-                            const teamLoggerData = structuredData[date][hours]?.teamlogerReport;
+                    if (Object.keys(structuredData).length > 0) {
+                        Object.keys(structuredData).map((date) => {
+                            Object.keys(structuredData[date]).map((hours) => {
+                                const teamLoggerData = structuredData[date][hours]?.teamlogerReport;
 
-                            dateData[datetime] = {
-                                activeTimeCount: teamLoggerData?.activeTimeCount || 0,
-                                idleHours: parseFloat(idleHours.toFixed(2)),
-                                inactiveTimeCount: teamLoggerData?.inactiveTimeCount || 0,
-                                meetingHours: parseFloat(meetingHours.toFixed(2)),
-                                offComputerHours: parseFloat(offComputerHours.toFixed(2)),
-                                onComputerHours: parseFloat(onComputerHours.toFixed(2)),
-                                totalHours: parseFloat(totalHours.toFixed(2))
-                            }
+                                dateData = {
+                                    date: date,
+                                    time: hours,
+                                    activeTimeCount: teamLoggerData?.activeTimeCount || 0,
+                                    idleHours: teamLoggerData?.idleHours
+                                        ? Number(teamLoggerData.idleHours.toFixed(2))
+                                        : 0,
+                                    inactiveTimeCount: teamLoggerData?.inactiveTimeCount || 0,
+                                    meetingHours: teamLoggerData?.meetingHours
+                                        ? Number(teamLoggerData.meetingHours.toFixed(2))
+                                        : 0,
+                                    offComputerHours: teamLoggerData?.offComputerHours
+                                        ? Number(teamLoggerData.offComputerHours.toFixed(2))
+                                        : 0,
+                                    onComputerHours: teamLoggerData?.onComputerHours
+                                        ? Number(teamLoggerData.onComputerHours.toFixed(2))
+                                        : 0,
+                                    totalHours: teamLoggerData?.totalHours
+                                        ? Number(teamLoggerData.totalHours.toFixed(2))
+                                        : 0,                                    
+                                }
+                                const user = {
+                                    empId: val,
+                                    empName: fileData.dailySummary[val].userData?.name,
+                                    ...dateData
+                                }
+                                users.push(user);
+
+                            })
                         })
-                    })
+                    } else {
+                        const user = {
+                            empId: val,
+                            empName: fileData.dailySummary[val].userData?.name,
+                        }
+                        users.push(user);
+                    }
                 }
-                const user = {
-                    empId: val,
-                    empName: fileData.dailySummary[val].userData?.name,
-                    child: dateData
-                }
-                users.push(user);
             })
             setUsers(users);
         }
@@ -320,7 +393,7 @@ function TeamLoggerData() {
 
                 {/* Table Section */}
                 <Box sx={{ marginTop: "20px" }}>
-                    <CollapsibleTable
+                    <ReusableTable
                         columns={columns}
                         rows={users}
                         showPagination={true}
