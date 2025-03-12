@@ -263,12 +263,12 @@ function DashboardPage() {
     <>
       <Box sx={{ width: "100%", padding: "14px 11px" }}>
         <Button
-          style={{ border: "1px solid black" }}>
+          style={{ border: "1px solid black",backgroundColor:'#696969',color:'white' }}>
           Key Logger Activity
         </Button>
         <Button
           onClick={navigateToTeamLoggerData}
-          style={{ border: "1px solid black", marginLeft: "20px" }}>
+          style={{ border: "1px solid black", marginLeft: "20px"}}>
           Team Logger Data
         </Button>
         <StyledBox>

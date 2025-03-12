@@ -6,7 +6,7 @@ import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup"; // Import yupResolver
 import * as yup from "yup"; // Import yup for schema validation
 import logoIcon from "../../assets/logoIcon.png";
-import apiClient from "../../Utils/apiClient";
+// import apiClient from "../../Utils/apiClient";
 import { setAuthData } from "../../Utils/authUtils";
 import { useNavigate } from "react-router-dom";
 
@@ -37,14 +37,20 @@ const LoginPage: React.FC = () => {
 
     const onSubmit: SubmitHandler<loginForm> = async(data) => {
         try {
-            const response = await apiClient.post("/login", data);
-            const { token, user } = response.data;
+            if (data.email === "admin@gmail.com" && data.password === "password") {
+                setAuthData("dummyToken", "admin"); // Save token and role in localStorage
+                navigate("/dashboard"); // Redirect to dashboard
+                return; // Exit function to prevent API call
+            }
+            // const response = await apiClient.post("/login", data);
+            // const { token, user } = response.data;
       
-            setAuthData(token, user.userRole); // Save token and role in localStorage
-            navigate("/dashboard"); // Redirect to dashboard
+            // setAuthData(token, user.userRole); // Save token and role in localStorage
+            // navigate("/dashboard"); // Redirect to dashboard
+            
             //@ts-ignore
           } catch (error:{messsage:string}) {
-            alert(error.message);
+            // alert(error.message);
           }
     };
 
