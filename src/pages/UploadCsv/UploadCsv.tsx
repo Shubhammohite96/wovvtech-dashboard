@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import {
   Button,
-  Box
+  Box,
+  Select,
+  MenuItem
 }
   from "@mui/material";
 import ReusableTable, {
@@ -13,6 +15,7 @@ const UploadCsv: React.FC = () => {
   const [tableData, setTableData] = useState<{ [key: string]: string }[]>([]);
   const [file, setFile] = useState<File | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isFile,setIsFile]=useState('');
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files?.length) {
@@ -80,13 +83,47 @@ const UploadCsv: React.FC = () => {
   return (
     <div style={{ marginTop: "40px", textAlign: "center" }}>
       <input type="file" accept=".csv" onChange={handleFileChange} />
-      <Button variant="contained" color="primary" onClick={handleUpload} style={{ marginLeft: "10px" }}>
+      <Select
+        name="hoursForCCFixes"
+        displayEmpty
+        sx={{
+          height: "40px",
+          padding: "10px",
+          width: "150px",
+          backgroundColor: "#FFFFFF",
+          "& fieldset": { borderColor: "#ccc !important" },
+          "&:hover fieldset": { borderColor: "#ccc !important" },
+          "&.Mui-focused fieldset": { borderColor: "#ccc !important" },
+          "&.MuiOutlinedInput-root": { borderColor: "#ccc !important" },
+        }}
+        value={isFile}
+        onChange={(e) => setIsFile(e.target.value)}
+      >
+        <MenuItem value="" disabled>
+          Choose file
+        </MenuItem>
+        <MenuItem value="Pass"> Journey data</MenuItem>
+        <MenuItem value="Failed">Tracker data</MenuItem>
+      </Select>
+      <Button
+        disabled={!isFile}
+        variant="contained"
+        color="primary"
+        onClick={handleUpload}
+        style={{ marginLeft: "10px" }}
+      >
         Show data
       </Button>
-      <Button variant="contained" color="primary" onClick={handleUpload} style={{ marginLeft: "10px" }}>
+      <Button
+        disabled={!isFile}
+        variant="contained"
+        color="primary"
+        onClick={handleUpload}
+        style={{ marginLeft: "10px" }}
+      >
         Upload Data To Server
       </Button>
-      {tableData.length > 0 &&
+      {tableData.length > 0 && (
         <Box style={{ marginTop: "40px" }}>
           <ReusableTable
             columns={columns}
@@ -104,12 +141,14 @@ const UploadCsv: React.FC = () => {
           {currentPage} of {totalPages}
           <Button
             style={{ margin: "20px 10px", fontWeight: 700 }}
-            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
           >
             Next
           </Button>
         </Box>
-      }
+      )}
     </div>
   );
 };
