@@ -92,7 +92,7 @@ const KeyLoggerList: React.FC<KeyLoggerListProps> = ({ fileData, setFileData }) 
                     const fileName = file.split("/").pop();
                     // structuredData[key].lastFileName = fileName;
                     const [date, timeSlot] = fileName.split(".")[0].split("_");
-                    if (dateTimeSlot[key]?.[date]) {
+                    if (dateTimeSlot[key]?.[date]) { 
                         dateTimeSlot[key] = { ...dateTimeSlot[key], [date]: [...dateTimeSlot[key][date], timeSlot] }
                     } else {
                         console.log(isValidDateFormat(date));
