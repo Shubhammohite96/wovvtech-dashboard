@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import CustomTextField from "../../components/cutomComponents/CustomTextField";
 import StarIcon from "@mui/icons-material/Star";
 import CustomButton from "../../components/cutomComponents/CustomButton";
-import UserProfileTabs from "./UserProfileTabs";
  
 //@ts-ignore
 const StyledTextarea = styled(TextareaAutosize)(({ theme }) => ({
@@ -50,9 +49,7 @@ const SelfEvaluationForm = () => {
   }
   return (
     <Box sx={{ width: "100%", padding: "14px" }}>
-         <Box my={3}>
-        <UserProfileTabs />
-      </Box>
+       <Typography variant="h5" textAlign={'center'} mt={'1%'}>Self Evaluation Form</Typography>
       <Box
         sx={{
           width: "100%",

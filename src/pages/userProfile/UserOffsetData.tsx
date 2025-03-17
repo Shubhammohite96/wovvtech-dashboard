@@ -1,11 +1,10 @@
 import React, { useState, useMemo } from 'react';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import CustomSelectDropdown from '../../components/cutomComponents/CustomDropdown';
 import { SelectChangeEvent } from '@mui/material';
 import ReusableTable, {
     ColumnConfig,
   } from "../../components/cutomComponents/ReusableTable";
-import UserProfileTabs from './UserProfileTabs';
 
 const data = [
   {
@@ -83,9 +82,7 @@ const OffsetDataComponent: React.FC = () => {
   return (
     <Box>
       {/* Dropdown Filter */}
-      <Box my={4}>
-      <UserProfileTabs />
-        </Box>
+       <Typography variant="h5" textAlign={'center'} mt={'1%'}>Offset Form Data</Typography>
       <Box m={10}>
       <Box mb={2}>
         <CustomSelectDropdown

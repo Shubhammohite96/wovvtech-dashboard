@@ -4,7 +4,8 @@ import {
     Box,
     SelectChangeEvent,
     Typography,
-    Button
+    Button,
+    CircularProgress
 } from "@mui/material";
 import {
     StyledTypography,
@@ -120,6 +121,7 @@ function TeamLoggerData() {
     const [selectedRow, setSelectedRow] = useState(null)
     const [fileData, setFileData] = useState<FileData>({ dailySummary: {}, structuredData: {} });
     const [users, setUsers] = useState<User[]>([]);
+    const [loader, setLoader] = useState(false);
     const navigate = useNavigate();
 
     // Options for dropdown
@@ -203,6 +205,7 @@ function TeamLoggerData() {
     ];
 
     useEffect(() => {
+        setLoader(true);
         if (Object.keys(fileData.structuredData).length) {
             const users: User[] = [];
 
@@ -234,7 +237,7 @@ function TeamLoggerData() {
                                         : 0,
                                     totalHours: teamLoggerData?.totalHours
                                         ? Number(teamLoggerData.totalHours.toFixed(2))
-                                        : 0,                                    
+                                        : 0,
                                 }
                                 const user = {
                                     empId: val,
@@ -255,19 +258,20 @@ function TeamLoggerData() {
                 }
             })
             setUsers(users);
+            setLoader(false);
         }
     }, [fileData])
     return (
         <>
             <Box sx={{ width: "100%", padding: "14px 11px" }}>
                 <Button
-                    style={{ border: "1px solid black" ,}}
+                    style={{ border: "1px solid black", }}
                     onClick={navigateToKeyLoggerData}
                 >
-                  Key Logger Activity
+                    Key Logger Activity
                 </Button>
                 <Button
-                    style={{ border: "1px solid black", marginLeft: "20px",backgroundColor:'#696969',color:'white'  }}>
+                    style={{ border: "1px solid black", marginLeft: "20px", backgroundColor: '#696969', color: 'white' }}>
                     Team Logger Data
                 </Button>
                 <StyledBox>
@@ -392,14 +396,20 @@ function TeamLoggerData() {
                 </Box>
 
                 {/* Table Section */}
-                <Box sx={{ marginTop: "20px" }}>
-                    <ReusableTable
-                        columns={columns}
-                        rows={users}
-                        showPagination={true}
-                        pageSize={15}
-                    />
-                </Box>
+                {loader ? (
+                    <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "300px" }}>
+                        <CircularProgress />
+                    </Box>
+                ) : (
+                    <Box sx={{ marginTop: "20px" }}>
+                        <ReusableTable
+                            columns={columns}
+                            rows={users}
+                            showPagination={true}
+                            pageSize={15}
+                        />
+                    </Box>
+                )}
                 <ClaimModal open={isModalOpen} onClose={() => setModalOpen(false)} rowData={selectedRow || undefined} />
                 <KeyLoggerList fileData={fileData} setFileData={setFileData} />
             </Box>

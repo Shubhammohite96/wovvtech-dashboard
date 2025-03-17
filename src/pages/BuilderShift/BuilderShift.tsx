@@ -1,7 +1,6 @@
 import { Box, Button, Typography, RadioGroup, FormControlLabel, Radio, Checkbox } from "@mui/material";
 import React, { useState } from "react";
 import CustomTextField from "../../components/cutomComponents/CustomTextField";
-import Navbar from "../../components/Navbar";
 import { StyledDsrRoot } from "../reports/DsrStyle";
 
 const BuilderShift = () => {
@@ -37,7 +36,7 @@ const BuilderShift = () => {
   
   return (
     <StyledDsrRoot>
-      <Navbar />
+      <Typography variant="h5" textAlign={'center'}>Builder Tickets</Typography>
       <Box
         sx={{
           width: "100%",

@@ -4,7 +4,8 @@ import {
   Box,
   SelectChangeEvent,
   Typography,
-  Button
+  Button,
+  CircularProgress
 } from "@mui/material";
 import {
   StyledTypography,
@@ -128,6 +129,8 @@ function DashboardPage() {
   const [selectedRow, setSelectedRow] = useState(null)
   const [fileData, setFileData] = useState<FileData>({ dailySummary: {}, structuredData: {} });
   const [users, setUsers] = useState<User[]>([]);
+  const [loader, setLoader] = useState(false);
+
   const navigate = useNavigate();
 
   // Options for dropdown
@@ -206,6 +209,7 @@ function DashboardPage() {
   ];
 
   useEffect(() => {
+    setLoader(true);
     if (Object.keys(fileData.structuredData).length) {
       const users: User[] = [];
 
@@ -224,11 +228,11 @@ function DashboardPage() {
                   date: date,
                   time: hours,
                   visibleKeys: keylogerData?.visibleKeys,
-                  visiblePercentage: keylogerData?.visiblePercentage,
+                  visiblePercentage: Number.isNaN(keylogerData?.visiblePercentage) ? 0 : keylogerData?.visiblePercentage,
                   invisibleKeys: keylogerData?.invisibleKeys,
                   totalKeys: keylogerData?.totalKeys,
                   whitespaceKeys: keylogerData?.whitespaceKeys,
-                  whitespacePercentage: keylogerData?.whitespacePercentage,
+                  whitespacePercentage: Number.isNaN(keylogerData?.whitespacePercentage) ? 0 : keylogerData?.whitespacePercentage
                 };
 
                 const user: User = {
@@ -256,6 +260,7 @@ function DashboardPage() {
       });
 
       setUsers(users);
+      setLoader(false);
     }
   }, [fileData]);
 
@@ -393,14 +398,15 @@ function DashboardPage() {
         </Box>
 
         {/* Table Section */}
-        <Box sx={{ marginTop: "20px", width: "99% !important", }}>
-          <ReusableTable
-            columns={columns}
-            rows={users}
-            showPagination={true}
-            pageSize={15}
-          />
-        </Box>
+        {loader ? (
+          <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "300px" }}>
+            <CircularProgress />
+          </Box>
+        ) : (
+          <Box sx={{ marginTop: "20px", width: "99% !important" }}>
+            <ReusableTable columns={columns} rows={users} showPagination={true} pageSize={15} />
+          </Box>
+        )}
         <ClaimModal open={isModalOpen} onClose={() => setModalOpen(false)} rowData={selectedRow || undefined} />
         <KeyLoggerList fileData={fileData} setFileData={setFileData} />
       </Box>

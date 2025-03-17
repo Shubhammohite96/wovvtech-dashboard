@@ -13,7 +13,7 @@ const Navbar: React.FC = () => {
 
   return (
     <Tabs value={getSelectedTab()} centered>
-      <Tab label="Daily DSR" component={Link} to="/DsrReport" />
+    <Tab label="Daily DSR" component={Link} to="/DsrReport" />
       <Tab label="Weekly Form" component={Link} to="/WeeklyFormData" />
       <Tab label="Offset Form" component={Link} to="/OffsetForm"/>
       <Tab label="Builder Tickets" component={Link} to="/BuilderTickets" />

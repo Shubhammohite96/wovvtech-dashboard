@@ -8,7 +8,6 @@ import {
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { StyledDsrRoot } from './DsrStyle';
 import CustomTextField from "../../components/cutomComponents/CustomTextField";
-import Navbar from "../../components/Navbar";
 
 const BuilderTickets: React.FC = () => {
     const [formData, setFormdata] = useState({
@@ -51,7 +50,7 @@ const BuilderTickets: React.FC = () => {
     console.log('child re render builder tickets')
     return (
         <StyledDsrRoot>
-            <Navbar />
+            <Typography variant="h5" textAlign={'center'}>Builder Tickets</Typography>
             <Box
                 sx={{
                     width: "100%",
@@ -125,6 +124,7 @@ const BuilderTickets: React.FC = () => {
                                     "&.Mui-focused fieldset": { borderColor: "#ccc !important" },
                                     "&.MuiOutlinedInput-root": { borderColor: "#ccc !important" },
                                 },
+
                             }}
                             sx={{
                                 width: "406px",

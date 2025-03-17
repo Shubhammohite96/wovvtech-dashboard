@@ -1,6 +1,5 @@
 import { Box, Container, MenuItem, Select, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import UserProfileTabs from "./UserProfileTabs";
 import ReusableTable, { ColumnConfig } from "../../components/cutomComponents/ReusableTable";
 
 interface FormEntry {
@@ -61,12 +60,9 @@ const DsrCardDetails = () => {
 
   return (
     <Box>
-      <Box my={4}>
-        <UserProfileTabs />
-      </Box>
-      
       {/* Filters Section */}
       <Container maxWidth="md">
+      <Typography variant="h5" textAlign={'center'} mt={'1%'}>DSR</Typography>
         <Box display="flex" justifyContent="space-between" my={3}>
           {/* Month Filter */}
           <Box>

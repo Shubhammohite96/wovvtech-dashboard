@@ -9,7 +9,6 @@ import {
 import Grid from "@mui/material/Grid2";
 import { Email, LocationOn, Person, Phone } from "@mui/icons-material";
 import { styled } from "@mui/system";
-import UserProfileTabs from "./UserProfileTabs";
 
 const ProfileCard = styled(Paper)(({ theme }) => ({
   position: "relative",
@@ -24,9 +23,6 @@ const UserProfile = () => {
 
   return (
     <Box>
-      <Box my={4}>
-        <UserProfileTabs />
-      </Box>
       <Container maxWidth="md">
         <ProfileCard elevation={2}>
           {/* Cover Photo Area */}

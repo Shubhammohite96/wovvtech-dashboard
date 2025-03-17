@@ -54,7 +54,7 @@ function Routing() {
           }
         />
         <Route
-          path="/Profile"
+          path="/userprofile/Profile"
           element={
             <PrivateRoute allowedRoles={["admin"]}>
               <UserProfile />
@@ -62,7 +62,7 @@ function Routing() {
           }
         />
         <Route
-          path="/DsrReport"
+          path="/reports/DsrReport"
           element={
             <PrivateRoute allowedRoles={["admin"]}>
               <DsrReport />
@@ -79,7 +79,7 @@ function Routing() {
         />
 
         <Route
-          path="/WeeklyFormData"
+          path="/reports/WeeklyFormData"
           element={
             <PrivateRoute allowedRoles={["admin"]}>
               <WeeklyDataForm />
@@ -88,7 +88,7 @@ function Routing() {
         />
 
         <Route
-          path="/OffsetForm"
+          path="/reports/OffsetForm"
           element={
             <PrivateRoute allowedRoles={["admin"]}>
               <OffsetForm />
@@ -115,7 +115,7 @@ function Routing() {
         />
 
         <Route
-          path="/BuilderTickets"
+          path="/reports/BuilderTickets"
           element={
             <PrivateRoute allowedRoles={["admin"]}>
               <BuilderTickets />
@@ -133,7 +133,7 @@ function Routing() {
         />
 
         <Route
-          path="/MonthFilterTable"
+          path="/userprofile/MonthFilterTable"
           element={
             <PrivateRoute allowedRoles={["admin"]}>
               <MonthFilterTable />
@@ -142,7 +142,7 @@ function Routing() {
         />
 
         <Route
-          path="/DsrCardDetails"
+          path="/userprofile/DsrCardDetails"
           element={
             <PrivateRoute allowedRoles={["admin"]}>
               <DsrCardDetails />
@@ -151,7 +151,7 @@ function Routing() {
         />
 
         <Route
-          path="/BuilderShift"
+          path="/reports/BuilderShift"
           element={
             <PrivateRoute allowedRoles={["admin"]}>
               <BuilderShift />
@@ -196,7 +196,7 @@ function Routing() {
         />
 
         <Route
-          path="/SelfEvaluationForm"
+          path="/userprofile/SelfEvaluationForm"
           element={
             <PrivateRoute allowedRoles={["admin"]}>
               <SelfEvaluationForm />

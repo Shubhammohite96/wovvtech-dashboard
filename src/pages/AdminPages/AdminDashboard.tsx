@@ -5,51 +5,11 @@ import {
 import Grid from "@mui/material/Grid2";
 import ReportCard from "./ReportCard";
 import EmployeeReport from "./EmployeeReport";
-import ReusableTable, {
-  ColumnConfig,
-} from "../../components/cutomComponents/ReusableTable";
+
 import CustomButton from "../../components/cutomComponents/CustomButton";
 
 const AdminDashboard = () => {
-  const users = [
-    {
-      id: 1,
-      empName: "Aman Gupta",
-      empId: "TCPL496",
-      teamLoggersHrs: 28,
-      builderHrs: 16,
-      idleHrs: 16,
-      action: "coming soon",
-    },
-  ];
 
-  // Column definitions (columns)
-  const columns: ColumnConfig<(typeof users)[0]>[] = [
-    {
-      key: "empName",
-      label: "Employee Name",
-    },
-    {
-      key: "empId",
-      label: "Emp Id",
-    },
-    {
-      key: "teamLoggersHrs",
-      label: "Team logger hrs",
-    },
-    {
-      key: "builderHrs",
-      label: "Builder Hr's",
-    },
-    {
-      key: "idleHrs",
-      label: "Idle Hr's",
-    },
-    {
-      key: "action",
-      label: "Action",
-    },
-  ];
   return (
     <Box
       sx={{ width: "100%", padding: "12px 20px", display: "flex", gap: "20px" }}
@@ -88,19 +48,7 @@ const AdminDashboard = () => {
               </Grid>
 
               {/* Team Logger Table */}
-              <Grid size={{ xs: 12 }}>
-                <Box mt={2}>
-                  <Typography sx={{ color: "#000000", fontSize: "24px" }}>
-                    Team Logger / Key Logger Table
-                  </Typography>
-                  <ReusableTable
-                    columns={columns}
-                    rows={users}
-                    showPagination={false}
-                    pageSize={5}
-                  />
-                </Box>
-              </Grid>
+             
             </Grid>
           </Grid>
 

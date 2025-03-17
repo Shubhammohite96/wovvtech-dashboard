@@ -7,16 +7,15 @@ import {
 } from "@mui/material";
 import CustomTextField from "../../components/cutomComponents/CustomTextField";
 import CustomButton from "../../components/cutomComponents/CustomButton";
-import Navbar from "../../components/Navbar";
 
 const OffsetForm = () => {
   return (
     <Box>
-      <Navbar />
+       <Typography variant="h5" textAlign={'center'} mt={'1%'}>Offset Form Data</Typography>
       <Box
         sx={{
           width: "100%",
-          marginTop: "2%",
+          marginTop: "1%",
           padding: "14px 11px",
           display: "flex",
           justifyContent: "center",
