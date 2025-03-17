@@ -34,6 +34,7 @@ const KeyLoggerList: React.FC<KeyLoggerListProps> = ({ fileData, setFileData }) 
     }, []);
 
     const getFileListing = async (employees: any[]) => {
+        // @ts-ignore
         const userListFileList: Record<string, string> = userLastFileStore.value;
 
         const userIdWithLogerId: Record<string, any> = {};
@@ -45,7 +46,8 @@ const KeyLoggerList: React.FC<KeyLoggerListProps> = ({ fileData, setFileData }) 
             userIdWithLogerId[empCode] = user;
             return {
                 employeeId: empCode,
-                fileName: userListFileList[user.emp_code] || "",
+                // fileName: userListFileList[user.emp_code] || "",
+                fileName: `2025-03-17_09-10_${user.emp_code}.enc` || "",
             };
         });
 

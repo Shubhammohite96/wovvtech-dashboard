@@ -1,7 +1,6 @@
 import { Box, Button, TextField, Typography, Select, MenuItem, RadioGroup, FormControlLabel, Radio } from "@mui/material";
 import React, { useState } from "react";
 import CustomTextField from "../../components/cutomComponents/CustomTextField";
-import Navbar from "../../components/Navbar";
 import { StyledDsrRoot } from "./DsrStyle"
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
@@ -55,17 +54,18 @@ const WeeklyDataForm = () => {
 
   return (
     <StyledDsrRoot>
-      <Navbar />
+        <Typography variant="h5" textAlign={'center'}>Weekly Form Data</Typography>
       <Box
         sx={{
           width: "100%",
-          marginTop: "2%",
+          marginTop: "1%",
           padding: "14px 11px",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
         }}
       >
+ 
         <Box>
           <Box
             sx={{ display: "flex", flexDirection: "column", marginTop: "10px" }}

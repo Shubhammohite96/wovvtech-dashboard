@@ -12,7 +12,6 @@ import CustomButton from "../../components/cutomComponents/CustomButton";
 import ReusableTable, {
   ColumnConfig,
 } from "../../components/cutomComponents/ReusableTable";
-import Navbar from "../../components/Navbar";
 
 interface FormEntry {
   id: number;
@@ -124,15 +123,15 @@ const DsrReport: React.FC = () => {
  
   return (
     <StyledDsrRoot>
-      <Navbar />
       <Box
         sx={{
-          marginTop: "2%",
+          marginTop: "1%",
           display: "flex",
           marginBottom: "2%",
           gap:'30px',
         }}
       >
+
         <StyledFormBox>
           <StyledTypography>DSR</StyledTypography>
 
