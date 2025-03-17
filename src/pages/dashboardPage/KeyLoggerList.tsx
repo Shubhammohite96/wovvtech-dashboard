@@ -92,7 +92,7 @@ const KeyLoggerList: React.FC<KeyLoggerListProps> = ({ fileData, setFileData }) 
                     const fileName = file.split("/").pop();
                     // structuredData[key].lastFileName = fileName;
                     const [date, timeSlot] = fileName.split(".")[0].split("_");
-                    if (dateTimeSlot[key]?.[date]) {
+                    if (dateTimeSlot[key]?.[date]) { 
                         dateTimeSlot[key] = { ...dateTimeSlot[key], [date]: [...dateTimeSlot[key][date], timeSlot] }
                     } else {
                         console.log(isValidDateFormat(date));
@@ -108,13 +108,10 @@ const KeyLoggerList: React.FC<KeyLoggerListProps> = ({ fileData, setFileData }) 
                             .split("\n")
                             .map((line: any) => decryptData(line.trim()))
                             .filter(Boolean);
-
-
                         const parsedData = decryptedLines.map((line: string) => {
-                            const match = line.match(/\["(.+?)", (.+?) pressed\]/);
+                            const match = line.match(/\[?"?([\d-:\s,.]+)"?\]?,?\s?"?(.+?)"?\s?pressed"?\]?/);
                             return match ? { timestamp: match[1], key: match[2] } : null;
                         }).filter(Boolean);
-
                         const groupedData = groupDataBySlots(parsedData) as { key: string }[];
 
                         let analysisResults = {
