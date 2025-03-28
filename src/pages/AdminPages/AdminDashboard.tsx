@@ -48,7 +48,68 @@ const AdminDashboard = () => {
               </Grid>
 
               {/* Team Logger Table */}
-             
+              <Grid size={{ xs: 12, md: 6 }}>
+              <Box
+              sx={{
+                padding: 2,
+                marginBottom: 2,
+                backgroundColor: "#f5f5f5",
+                borderRadius: "10px",
+                width: "100%",
+                boxShadow: 1,
+              }}
+            >
+              <Box sx={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+              <Typography sx={{fontSize:'18px',fontWeight:'600'}}>KeyLogger Alert</Typography>
+              <CustomButton
+              btnText="View all"
+              buttonVariant="text"
+              btnStyle={{ margin: "0px", width: "42px" ,fontSize:'12px'}}
+              buttonId="outlined-button"
+              handleButtonClick={()=>{alert('coming soon')}}
+            />
+              </Box>
+              {[...Array(6)].map((_, index) => (
+                <Box sx={{display:'flex',justifyContent:'space-between'}} my={2}>
+                  <Box>
+                  <Typography key={index} sx={{fontSize:'14px'}}>Shubham Mohite</Typography>
+                  </Box>
+                  <Typography key={index}>00hrs</Typography>
+                </Box>
+              ))}
+            </Box>
+              </Grid>
+              <Grid size={{ xs: 12, md: 6 }}>
+              <Box
+              sx={{
+                padding: 2,
+                marginBottom: 2,
+                backgroundColor: "#f5f5f5",
+                borderRadius: "10px",
+                width: "100%",
+                boxShadow: 1,
+              }}
+            >
+              <Box sx={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+              <Typography sx={{fontSize:'18px',fontWeight:'600'}}>TeamLogger alert</Typography>
+              <CustomButton
+              btnText="View all"
+              buttonVariant="text"
+              btnStyle={{ margin: "0px", width: "42px" ,fontSize:'12px'}}
+              buttonId="outlined-button"
+              handleButtonClick={()=>{alert('coming soon')}}
+            />
+              </Box>
+              {[...Array(6)].map((_, index) => (
+                <Box sx={{display:'flex',justifyContent:'space-between'}} my={2}>
+                  <Box>
+                  <Typography key={index} sx={{fontSize:'14px'}}>Parth pathak</Typography>
+                  </Box>
+                  <Typography key={index}>00hrs</Typography>
+                </Box>
+              ))}
+            </Box>
+              </Grid>
             </Grid>
           </Grid>
 

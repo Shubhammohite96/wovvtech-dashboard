@@ -26,12 +26,12 @@ const EmployeeReport: React.FC<EmployeeReportProps> = ({
       sx={{
         backgroundColor: "#f5f5f5",
         borderRadius: "10px",
-        padding: "16px",
+        padding: "12px",
         width: "100%",
         boxShadow: 1,
       }}
     >
-      <Typography sx={{color:'#000000',fontSize:'22px'}}>
+      <Typography sx={{color:'#000000',fontSize:'18px'}}>
         {title}
       </Typography>
 

@@ -46,6 +46,9 @@ interface User {
   visiblePercentage: number;
   whitespaceKeys: number;
   whitespacePercentage: number;
+  totalKeysBelow10k:boolean;
+  visibleExceeds85:boolean;
+  whitespaceExceeds75:boolean;
   child?: {
     [date: string]: {
       totalKeyPress?: number;
@@ -79,6 +82,9 @@ interface KeyloggerData {
   totalKeys?: number;
   whitespaceKeys?: number;
   whitespacePercentage: number;
+  totalKeysBelow10k:boolean;
+  visibleExceeds85:boolean;
+  whitespaceExceeds75:boolean;
 }
 
 interface ITeamLoggerData {
@@ -173,7 +179,7 @@ function DashboardPage() {
     },
     {
       key: "time",
-      label: "Hours",
+      label: "Time Period",
       icon: sortIcon,
     },
     {
@@ -205,6 +211,21 @@ function DashboardPage() {
       key: "whitespacePercentage",
       label: "Whitespace Percentage",
       icon: sortIcon,
+    },
+    {
+      key: "totalKeysBelow10k",
+      label: "Total Keys Below 10k",
+      icon: sortIcon,
+    },
+    {
+      key: "visibleExceeds85",
+      label: "visible Exceeds 85",
+      icon: sortIcon,
+    },
+    {
+      key: "whitespaceExceeds75",
+      label: "visible Exceeds 85",
+      icon: sortIcon,
     }
   ];
 
@@ -232,7 +253,10 @@ function DashboardPage() {
                   invisibleKeys: keylogerData?.invisibleKeys,
                   totalKeys: keylogerData?.totalKeys,
                   whitespaceKeys: keylogerData?.whitespaceKeys,
-                  whitespacePercentage: Number.isNaN(keylogerData?.whitespacePercentage) ? 0 : keylogerData?.whitespacePercentage
+                  whitespacePercentage: Number.isNaN(keylogerData?.whitespacePercentage) ? 0 : keylogerData?.whitespacePercentage,
+                  totalKeysBelow10k:keylogerData?.totalKeysBelow10k === true ? 'true':'false',
+                  visibleExceeds85:keylogerData?.visibleExceeds85 === true ? 'true' :'false',
+                  whitespaceExceeds75:keylogerData?.whitespaceExceeds75 === false ? 'false' : 'true'
                 };
 
                 const user: User = {
@@ -253,6 +277,9 @@ function DashboardPage() {
               invisibleKeys: 0,
               whitespaceKeys: 0,
               whitespacePercentage: 0,
+              totalKeysBelow10k:true,
+              visibleExceeds85:true,
+              whitespaceExceeds75:false
             };
             users.push(user);
           }
