@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from "react";
-import CustomSelectDropdown from "../../components/cutomComponents/CustomDropdown";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
   SelectChangeEvent,
   Typography,
   Button,
-  CircularProgress
+  CircularProgress,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl
 } from "@mui/material";
 import {
   StyledTypography,
@@ -14,16 +17,15 @@ import {
   StyledChildCommonDropDownsBox,
 } from "./DashboardStyle";
 import CustomButton from "../../components/cutomComponents/CustomButton";
-import CustomTextField from "../../components/cutomComponents/CustomTextField";
 import ReusableTable, {
   ColumnConfig,
 } from "../../components/cutomComponents/ReusableTable";
 import sortIcon from "../../assets/sortIcon.png";
-import { Search } from "@mui/icons-material";
 import ClaimModal from "./ClaimModal";
 import KeyLoggerList from "./KeyLoggerList";
 import { useNavigate } from "react-router-dom";
-
+import { fetchAllLogerUsers} from '../../services/teamLoggerApis'
+import { Autocomplete, TextField } from '@mui/material';
 interface User {
   empId: string | number;
   empName?: string;
@@ -46,6 +48,9 @@ interface User {
   visiblePercentage: number;
   whitespaceKeys: number;
   whitespacePercentage: number;
+  totalKeysBelow10k:boolean;
+  visibleExceeds85:boolean;
+  whitespaceExceeds75:boolean;
   child?: {
     [date: string]: {
       totalKeyPress?: number;
@@ -79,6 +84,9 @@ interface KeyloggerData {
   totalKeys?: number;
   whitespaceKeys?: number;
   whitespacePercentage: number;
+  totalKeysBelow10k:boolean;
+  visibleExceeds85:boolean;
+  whitespaceExceeds75:any;
 }
 
 interface ITeamLoggerData {
@@ -122,38 +130,103 @@ interface FileData {
   structuredData: StructuredData
 }
 
+const timeSlots: string[] = [
+  '09-10', '10-11', '11-12', '12-13',
+  '13-14', '14-15', '15-16', '16-17',
+  '17-18', '18-19'
+];
+
 function DashboardPage() {
-  const [selectedValue, setSelectedValue] = useState<string | number>("");
-  const [isModalOpen, setModalOpen] = useState(false);
+  const [isModalOpen, setModalOpen] = React.useState(false);
   //@ts-ignore
   const [selectedRow, setSelectedRow] = useState(null)
   const [fileData, setFileData] = useState<FileData>({ dailySummary: {}, structuredData: {} });
   const [users, setUsers] = useState<User[]>([]);
   const [loader, setLoader] = useState(false);
+  const [userList,setUserList] = useState<UserData[]>([])
+  const [selectedUsers, setSelectedUsers] = useState<UserData[]>([]);
+  const [selectedDate, setSelectedDate] = useState('');
 
-  const navigate = useNavigate();
+  const [selectedSlot, setSelectedSlot] = useState<string>('');
+  const [formList123, setFormList123] = useState<any>({
+    employeeIds: [],
+  });
+  const[requiredError,setRequiredError]=useState(false)
+  const keyLoggerRef = useRef<any>(null);
+  
 
-  // Options for dropdown
-  const menuItems = [
-    { value: "option1", label: "Option 1" },
-    { value: "option2", label: "Option 2" },
-    { value: "option3", label: "Option 3", disabled: true },
-    { value: "option4", label: "Option 4" },
-  ];
-  // Handle Change Event
-  const handleChange = (event: SelectChangeEvent<string | number>) => {
-    setSelectedValue(event.target.value);
+  const handleChangeTimeSlot = (event: SelectChangeEvent) => {
+    setSelectedSlot(event.target.value);
   };
+
+  const handleChangeDD = (_event: any, value: UserData[]) => {
+    setSelectedUsers(value);
+  };
+  const handleDateChange = (event:any) => {
+    setSelectedDate(event.target.value);
+  };
+  const navigate = useNavigate();
 
   const navigateToTeamLoggerData = () => {
     navigate('/TeamLoggerData')
   }
   // click function for custom btn
   const handleClick = () => {
-    console.log("Button clicked!");
+    if (!selectedUsers.length || !selectedDate || !selectedSlot) {
+      setFormList123([]);
+      setRequiredError(true)
+      return;
+    }
+    setRequiredError(false)
+    const employeeIds = selectedUsers.map((user) => ({
+      employeeId: user.emp_code ?? '',
+      fileName: `${selectedDate}_${selectedSlot}_${user.emp_code}.enc`,
+    }));
+  
+    setFormList123({ employeeIds });
+  
+    // Wait for next tick to let state update
+    setTimeout(() => {
+      if (keyLoggerRef.current) {
+        keyLoggerRef.current.fetchDataFromParent();
+        setLoader(true);
+      }
+    }, 0);
   };
 
-  console.log("fileData:", fileData)
+  const handleClearAll=()=>{
+    setSelectedUsers([]);
+    setSelectedDate('');
+    setSelectedSlot('')
+  }
+
+  const handleSelectAll=()=>{
+    if (!selectedDate || !selectedSlot) {
+      setFormList123([]);
+      setRequiredError(true)
+      return;
+    }
+    setRequiredError(false)
+    const employeeIds = userList.map((user) => {
+      const empCode = user.emp_code;
+      return {
+          employeeId: empCode,
+          // fileName: userListFileList[user.emp_code] || "",
+          fileName: `${selectedDate}_${selectedSlot}_${user.emp_code}.enc`,
+      };
+  });
+  setFormList123({ employeeIds });
+  
+  // Wait for next tick to let state update
+  setTimeout(() => {
+    if (keyLoggerRef.current) {
+      keyLoggerRef.current.fetchDataFromParent();
+      setLoader(true);
+    }
+  }, 0);
+  }
+  
+
 
   const columns: ColumnConfig<User>[] = [
     {
@@ -173,7 +246,7 @@ function DashboardPage() {
     },
     {
       key: "time",
-      label: "Hours",
+      label: "Time Period",
       icon: sortIcon,
     },
     {
@@ -205,11 +278,26 @@ function DashboardPage() {
       key: "whitespacePercentage",
       label: "Whitespace Percentage",
       icon: sortIcon,
+    },
+    {
+      key: "totalKeysBelow10k",
+      label: "Total Keys Below 10k",
+      icon: sortIcon,
+    },
+    {
+      key: "visibleExceeds85",
+      label: "visible Exceeds 85",
+      icon: sortIcon,
+    },
+    {
+      key: "whitespaceExceeds75",
+      label: "whiteSpace Exceeds 75",
+      icon: sortIcon,
     }
   ];
 
   useEffect(() => {
-    setLoader(true);
+    // setLoader(true);
     if (Object.keys(fileData.structuredData).length) {
       const users: User[] = [];
 
@@ -217,33 +305,42 @@ function DashboardPage() {
         let dateData: any = {};
 
         if (fileData.structuredData[val]) {
-          const structuredData = fileData.structuredData[val];          
+          const structuredData = fileData.structuredData[val];        
           if (Object.keys(structuredData).length > 0) {
             Object.keys(structuredData).map((date) => {
               
               Object.keys(structuredData[date]).map((hours) => {
                 const keylogerData = structuredData[date][hours]?.keylogerData;
+                if( keylogerData?.totalKeysBelow10k === false||
+                  keylogerData?.whitespaceExceeds75 === true ||
+                  keylogerData?.visibleExceeds85 === true
+                 ) {
 
-                dateData = {
-                  date: date,
-                  time: hours,
-                  visibleKeys: keylogerData?.visibleKeys,
-                  visiblePercentage: Number.isNaN(keylogerData?.visiblePercentage) ? 0 : keylogerData?.visiblePercentage,
-                  invisibleKeys: keylogerData?.invisibleKeys,
-                  totalKeys: keylogerData?.totalKeys,
-                  whitespaceKeys: keylogerData?.whitespaceKeys,
-                  whitespacePercentage: Number.isNaN(keylogerData?.whitespacePercentage) ? 0 : keylogerData?.whitespacePercentage
-                };
+                  dateData = {
+                    date: date,
+                    time: hours,
+                    visibleKeys: keylogerData?.visibleKeys,
+                    visiblePercentage: Number.isNaN(keylogerData?.visiblePercentage) ? 0 : keylogerData?.visiblePercentage,
+                    invisibleKeys: keylogerData?.invisibleKeys,
+                    totalKeys: keylogerData?.totalKeys,
+                    whitespaceKeys: keylogerData?.whitespaceKeys,
+                    whitespacePercentage: Number.isNaN(keylogerData?.whitespacePercentage) ? 0 : keylogerData?.whitespacePercentage,
+                    totalKeysBelow10k:keylogerData?.totalKeysBelow10k === true ? 'true':'false',
+                    visibleExceeds85:keylogerData?.visibleExceeds85 === true ? 'true' :'false',
+                    whitespaceExceeds75:keylogerData?.whitespaceExceeds75 == false ? 'false' : 'true'
+                  };
+                  const user: User = {
+                    empId: val,
+                    empName: fileData.dailySummary[val].userData?.name,
+                    ...dateData,
+                  };
+                  users.push(user);
+                }
 
-                const user: User = {
-                  empId: val,
-                  empName: fileData.dailySummary[val].userData?.name,
-                  ...dateData,
-                };
-                users.push(user);
               });
             });
-          } else {
+          } 
+          else {
             const user: User = {
               empId: val,
               empName: fileData.dailySummary[val].userData?.name,
@@ -253,6 +350,9 @@ function DashboardPage() {
               invisibleKeys: 0,
               whitespaceKeys: 0,
               whitespacePercentage: 0,
+              totalKeysBelow10k:true,
+              visibleExceeds85:true,
+              whitespaceExceeds75:false
             };
             users.push(user);
           }
@@ -264,23 +364,54 @@ function DashboardPage() {
     }
   }, [fileData]);
 
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const response = await fetchAllLogerUsers();
+          const userLists = response.data || [];
+          const employees = userLists.filter((user: any) => user.emp_code);
+
+          setUserList(employees)
+          if (employees.length) {
+            console.log(userLists, "shubhamMohite12345677");
+          }
+        } catch (error) {}
+      };
+
+      fetchData();
+    }, []);
+
+
   return (
     <>
       <Box sx={{ width: "100%", padding: "14px 11px" }}>
         <Button
-          style={{ border: "1px solid black",backgroundColor:'#696969',color:'white' }}>
+          style={{
+            border: "1px solid black",
+            backgroundColor: "#696969",
+            color: "white",
+          }}
+        >
           Key Logger Activity
         </Button>
         <Button
           onClick={navigateToTeamLoggerData}
-          style={{ border: "1px solid black", marginLeft: "20px"}}>
+          style={{ border: "1px solid black", marginLeft: "20px" }}
+        >
           Team Logger Data
         </Button>
         <StyledBox>
           <Box>
             <StyledTypography>Filters</StyledTypography>
           </Box>
-          <Box sx={{ display: "flex", gap: "30px" }}>
+          <Box sx={{ display: "flex", gap: "20px" }}>
+          <CustomButton
+              btnText="Select All"
+              buttonVariant="contained"
+              btnStyle={{ margin: "10px", width: "103px" }}
+              buttonId="outlined-button"
+              handleButtonClick={handleSelectAll}
+            />
             <CustomButton
               btnText="Apply"
               buttonVariant="contained"
@@ -293,131 +424,136 @@ function DashboardPage() {
               buttonVariant="outlined"
               btnStyle={{ margin: "10px", width: "103px" }}
               buttonId="outlined-button"
-              handleButtonClick={handleClick}
+              handleButtonClick={handleClearAll}
             />
           </Box>
         </StyledBox>
 
         {/* Filter DropDowns section */}
         <StyledDropDownsBox>
-          <StyledChildCommonDropDownsBox>
+          <StyledChildCommonDropDownsBox sx={{ width: "30%" }}>
             <Typography sx={{ color: "#0f172a", fontSize: "12px" }}>
               Employee Name
             </Typography>
-            <CustomSelectDropdown
-              fieldName="customDropdown"
-              fieldId="customDropdown"
-              fieldValue={selectedValue}
-              fieldMenuItems={menuItems}
-              handleChangeMenu={handleChange}
-              fieldError={false}
-              fieldStyles={selectDropdownStyles}
-              renderValue={(selected) =>
-                selected ? `${selectedValue}` : "Select an option"
-              }
+            <Autocomplete
+              multiple
+              options={userList.filter((user) => user.status === "ACTIVE")}
+              // getOptionLabel={(option: UserData) =>
+              //   `${option.name} (${option.email})`
+              // }
+              getOptionLabel={(option) => `${option.name} (${option.emp_code})`}
+              value={selectedUsers}
+              onChange={handleChangeDD}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Select a user"
+                  variant="outlined"
+                />
+              )}
             />
+            {selectedUsers.length > 0 && (
+              <div style={{ marginTop: "10px" }}>
+                <strong>Selected Users:</strong>
+                <ul>
+                  {selectedUsers.map((user) => (
+                    <li key={user.guid}>{user.name}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </StyledChildCommonDropDownsBox>
-          <StyledChildCommonDropDownsBox>
+          <StyledChildCommonDropDownsBox sx={{ width: "30%" }}>
             <Typography sx={{ color: "#0f172a", fontSize: "12px" }}>
               From
             </Typography>
-            <CustomSelectDropdown
-              fieldName="customDropdown"
-              fieldId="customDropdown"
-              fieldValue={selectedValue}
-              fieldMenuItems={menuItems}
-              handleChangeMenu={handleChange}
-              fieldError={false}
-              fieldStyles={selectDropdownStyles}
-              renderValue={(selected) =>
-                selected ? `${selectedValue}` : "Select an option"
-              }
+            <TextField
+              fullWidth
+              // inputRef={inputRef}
+              label="Select Date"
+              type="date"
+              value={selectedDate}
+              onChange={handleDateChange}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              inputProps={{
+                style: { cursor: "pointer" },
+              }}
             />
           </StyledChildCommonDropDownsBox>
-          <StyledChildCommonDropDownsBox>
+          <StyledChildCommonDropDownsBox sx={{ width: "30%" }}>
             <Typography sx={{ color: "#0f172a", fontSize: "12px" }}>
-              To
+              Time Period
             </Typography>
-            <CustomSelectDropdown
-              fieldName="customDropdown"
-              fieldId="customDropdown"
-              fieldValue={selectedValue}
-              fieldMenuItems={menuItems}
-              handleChangeMenu={handleChange}
-              fieldError={false}
-              fieldStyles={selectDropdownStyles}
-              renderValue={(selected) =>
-                selected ? `${selectedValue}` : "Select an option"
-              }
-            />
-          </StyledChildCommonDropDownsBox>
-          <StyledChildCommonDropDownsBox>
-            <Typography sx={{ color: "#0f172a", fontSize: "12px" }}>
-              From
-            </Typography>
-            <CustomSelectDropdown
-              fieldName="customDropdown"
-              fieldId="customDropdown"
-              fieldValue={selectedValue}
-              fieldMenuItems={menuItems}
-              handleChangeMenu={handleChange}
-              fieldError={false}
-              fieldStyles={selectDropdownStyles}
-              renderValue={(selected) =>
-                selected ? `${selectedValue}` : "Select an option"
-              }
-            />
-          </StyledChildCommonDropDownsBox>
-          <StyledChildCommonDropDownsBox>
-            <Typography sx={{ color: "#0f172a", fontSize: "12px" }}>
-              Time
-            </Typography>
-            <CustomSelectDropdown
-              fieldName="customDropdown"
-              fieldId="customDropdown"
-              fieldValue={selectedValue}
-              fieldMenuItems={menuItems}
-              handleChangeMenu={handleChange}
-              fieldError={false}
-              fieldStyles={selectDropdownStyles}
-              renderValue={(selected) =>
-                selected ? `${selectedValue}` : "Select an option"
-              }
-            />
+            <FormControl>
+              <InputLabel id="demo-simple-select-label">Time Period</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={selectedSlot}
+                label="Time Period"
+                onChange={handleChangeTimeSlot}
+              >
+                {timeSlots.map((slot) => (
+                  <MenuItem key={slot} value={slot}>
+                    {slot}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </StyledChildCommonDropDownsBox>
         </StyledDropDownsBox>
-        <Box sx={{ marginTop: { md: '10', sm: '20' } }}>
-          <CustomTextField
-            placeholder="Enter your name"
-            icon={<Search />}
-            height="40px"
-            padding="10px"
-            width="406px"
-            sx={{ backgroundColor: "#FFFFFF" }}
-          />
+        <Box sx={{ marginTop: { md: "10", sm: "20" } }}>
+          <Typography sx={{ color: "red" }}>
+            {requiredError ? "All fileds are required *" : ""}
+          </Typography>
         </Box>
 
         {/* Table Section */}
         {loader ? (
-          <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "300px" }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "300px",
+            }}
+          >
             <CircularProgress />
           </Box>
         ) : (
-          <Box sx={{ marginTop: "20px", width: "99% !important" }}>
-            <ReusableTable columns={columns} rows={users} showPagination={true} pageSize={15} />
+          <Box sx={{ marginTop: "20px", width: "1200px" }}>
+            {users.length ? (
+              <>
+                <ReusableTable
+                  columns={columns}
+                  rows={users}
+                  showPagination={true}
+                  pageSize={15}
+                />
+              </>
+            ) : (
+              <>
+                <h5 style={{textAlign:'center',marginTop:'140px'}}>Looks like there’s no data here. Apply a filter to fetch relevant results.</h5>
+              </>
+            )}
           </Box>
         )}
-        <ClaimModal open={isModalOpen} onClose={() => setModalOpen(false)} rowData={selectedRow || undefined} />
-        <KeyLoggerList fileData={fileData} setFileData={setFileData} />
+        <ClaimModal
+          open={isModalOpen}
+          onClose={() => setModalOpen(false)}
+          rowData={selectedRow || undefined}
+        />
+        <KeyLoggerList
+          fileData={fileData}
+          setFileData={setFileData}
+          formList={formList123}
+          ref={keyLoggerRef}
+        />
       </Box>
     </>
   );
 }
-const selectDropdownStyles: React.CSSProperties = {
-  width: "200px",
-  borderRadius: "8px",
-  height: "40px",
-  paddingRight: "9px",
-  backgroundColor: "#ffffff",
-};
+
 export default DashboardPage;

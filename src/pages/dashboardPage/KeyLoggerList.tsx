@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, {useImperativeHandle,forwardRef } from "react";
 import { fetchAllLogerUsers, getUserReport, getUserProductivity } from '../../services/teamLoggerApis'
 import { userLastFileStore } from "../../states/userLastFileStore";
 import { getUsersFileList, fetchEncryptedFile, decryptData, convertToUTC } from "./apiCalling";
@@ -7,6 +7,7 @@ import { groupDataBySlots, analyzeKeylogData, categorizeUsage } from "../../Util
 interface KeyLoggerListProps {
     fileData: any;
     setFileData: React.Dispatch<React.SetStateAction<any>>;
+    formList:any
 }
 
 function isValidDateFormat(dateStr: string) {
@@ -14,25 +15,48 @@ function isValidDateFormat(dateStr: string) {
     return regex.test(dateStr);
 }
 //@ts-ignore
-const KeyLoggerList: React.FC<KeyLoggerListProps> = ({ fileData, setFileData }) => {
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetchAllLogerUsers();
-                const userLists = response.data || [];
-                const employees = userLists.filter((user: any) => user.emp_code);
+const KeyLoggerList = forwardRef(({ fileData, setFileData, formList }: KeyLoggerListProps, ref) => {
 
-                if (employees.length) {
-                    await getFileListing(employees);
-                }
-            } catch (error) {
+    useImperativeHandle(ref, () => ({
+        fetchDataFromParent: handleFetchData
+    }));
+    
+  const employeeIdsone = Array.isArray(formList.employeeIds)
+    ? formList.employeeIds.map((user: any) => ({
+        employeeId: user.employeeId,
+        fileName:user.fileName
+      }))
+    : [];
 
+
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         try {
+    //             const response = await fetchAllLogerUsers();
+    //             const userLists = response.data || [];
+    //             const employees = userLists.filter((user: any) => user.emp_code);
+    //             console.log(userLists,'shubhamMohite1234')
+    //             if (employees.length) {
+    //                 await getFileListing(employees);
+    //             }
+    //         } catch (error) {
+
+    //         }
+    //     };
+
+    //     fetchData();
+    // }, []);
+const handleFetchData = async () => {
+        try {
+            const response = await fetchAllLogerUsers();
+            const userLists = response.data || [];
+            const employees = userLists.filter((user: any) => user.emp_code);
+            console.log(userLists, 'shubhamMohite1234')
+            if (employees.length) {
+                await getFileListing(employees);
             }
-        };
-
-        fetchData();
-    }, []);
-
+        } catch (error) {}
+    };
     const getFileListing = async (employees: any[]) => {
         // @ts-ignore
         const userListFileList: Record<string, string> = userLastFileStore.value;
@@ -40,31 +64,31 @@ const KeyLoggerList: React.FC<KeyLoggerListProps> = ({ fileData, setFileData }) 
         const userIdWithLogerId: Record<string, any> = {};
         const structuredData: Record<string, any> = {};
         const dailySummary: Record<string, any> = {};
-
+// @ts-ignore
         const employeeIds = employees.map((user) => {
             const empCode = user.emp_code;
             userIdWithLogerId[empCode] = user;
+            
             return {
                 employeeId: empCode,
                 // fileName: userListFileList[user.emp_code] || "",
-                fileName: `2025-03-17_09-10_${user.emp_code}.enc` || "",
+                fileName: `2025-04-10_13-14_${user.emp_code}.enc` || "",
             };
         });
-
+  
         const payload = {
-            pageUrl: "retrieveFTPFileV2",
-            entityName: "retrieveFTPFile",
-            action: "payload",
-            event: "replace",
-            formList: [
-                {
-                    entityName: "KeyLogger",
-                    employeeIds,
-                    tenantId: "_2012119111109",
-                },
-            ],
+          pageUrl: "retrieveFTPFileV2",
+          entityName: "retrieveFTPFile",
+          action: "payload",
+          event: "replace",
+          formList: [
+            {
+              entityName: "KeyLogger",
+              employeeIds: employeeIdsone,
+              tenantId: "_2012119111109",
+            },
+          ],
         };
-
         try {
             const response = await getUsersFileList(payload);
             const fileLists = response.data?.response?.[0] || {};
@@ -196,8 +220,7 @@ const KeyLoggerList: React.FC<KeyLoggerListProps> = ({ fileData, setFileData }) 
                                 },
                                 teamlogerReport: {},
                                 productivityReport: {},
-                            };
-                        }
+                            };                        }
 
                         dailySummary[key].dateWise[date].keylogerData.totalKeys += analysisResults.keylogerData.totalKeys || 0;
                         dailySummary[key].dateWise[date].keylogerData.whitespaceKeys += analysisResults.keylogerData.whitespaceKeys || 0;
@@ -275,5 +298,5 @@ const KeyLoggerList: React.FC<KeyLoggerListProps> = ({ fileData, setFileData }) 
     };
 
     return <> </>;
-};
+});
 export default KeyLoggerList;

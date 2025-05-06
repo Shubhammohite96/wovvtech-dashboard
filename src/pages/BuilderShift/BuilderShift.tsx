@@ -9,7 +9,7 @@ const BuilderShift = () => {
     selectedShiftTime: '',
     secondaryShiftTime: [] as string[]
   })
-
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormdata(prevState => ({ ...prevState, [e.target.name]: e.target.value }))
   }

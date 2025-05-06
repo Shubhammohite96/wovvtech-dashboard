@@ -15,13 +15,13 @@ const ReportCard: React.FC<ReportCardProps> = ({ title, value, total }) => {
       sx={{
         backgroundColor: "#f5f5f5",
         borderRadius: "10px",
-        padding: "16px",
+        padding: "12px",
         width: "100%",
         boxShadow: 1,
       }}
     >
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <Typography sx={{color:'#000000',fontSize:'22px'}}>
+        <Typography sx={{color:'#000000',fontSize:'18px'}}>
           {title}
         </Typography>
         <Box
