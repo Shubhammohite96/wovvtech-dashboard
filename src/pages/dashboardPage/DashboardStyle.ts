@@ -17,9 +17,10 @@ export const StyledBox = styled(Box)({
 
 export const StyledDropDownsBox = styled(Box)({
    display: 'flex',
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
     marginTop:'12px' ,
     flexWrap:'wrap',
+    gap:'20px'
   });
 
   export const StyledChildCommonDropDownsBox = styled(Box)({

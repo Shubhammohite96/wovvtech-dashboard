@@ -90,7 +90,7 @@ const OffsetDataComponent: React.FC = () => {
       setMenuAnchorEl(event.currentTarget);
     };
 
-
+// @ts-ignore
     const handleAction = (action: string) => { 
       setOpen(true)
       handleActionMenuClose();
